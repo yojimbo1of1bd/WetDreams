@@ -1,0 +1,1050 @@
+<!-- language: HTML/JS/CSS, file: starlet-directory-v5.html, target: modern browsers -->
+<!-- Serve folder: python -m http.server 8000 · Open: http://localhost:8000/starlet-directory-v5.html or run start.bat -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b080a">
+<title>Starlet Directory — Family + Newcomers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b080a;--surface:#151215;--surface-raised:#1e1a1e;--ink:#f2ece6;--muted:#9e948e;
+  --accent:#d4a853;--accent-weak:rgba(212,168,83,0.12);--accent-medium:rgba(212,168,83,0.25);
+  --line:rgba(242,236,230,0.07);--seen:#5ee29c;--seen-weak:rgba(94,226,156,0.12);
+  --fav:#f59e0b;--fav-weak:rgba(245,158,11,0.14);
+  --new:#60a5fa;--family:#fb7185;--radius:14px;--radius-sm:8px;
+  --shadow:0 1px 2px rgba(0,0,0,0.3),0 10px 28px -8px rgba(0,0,0,0.6);
+  --space:clamp(0.9rem,0.75rem + 0.8vw,1.4rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:0.92rem;line-height:1.55;min-height:100vh}
+header{position:sticky;top:0;z-index:100;background:rgba(11,8,10,0.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:.8rem 0}
+.header-inner{max-width:1600px;margin:0 auto;padding:0 var(--space);display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap}
+header h1{font-family:"Playfair Display",serif;font-size:1.6rem;font-weight:700;color:var(--accent)}
+header p{color:var(--muted);font-size:.82rem}
+.stats{display:flex;gap:1rem;font-size:.78rem}
+.stat{text-align:center}.stat b{display:block;color:var(--accent);font-size:1rem}.stat span{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.65rem}
+.tabs{background:var(--surface);border-bottom:1px solid var(--line);padding:0 var(--space);display:flex;gap:.4rem;max-width:1600px;margin:0 auto;overflow-x:auto}
+.tab{background:transparent;border:none;color:var(--muted);padding:.9rem 1.1rem;font-family:inherit;font-size:.88rem;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab .pill{display:inline-block;margin-left:.4rem;font-size:.68rem;padding:.05rem .35rem;border-radius:100px;background:var(--accent-weak);color:var(--accent);font-weight:600}
+.controls{background:var(--surface);border-bottom:1px solid var(--line);padding:.7rem var(--space);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;max-width:1600px;margin:0 auto}
+.controls input,.controls select,.controls button{background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:.5rem .9rem;border-radius:100px;font-family:inherit;font-size:.82rem;outline:none}
+.controls input:focus,.controls select:focus{border-color:var(--accent)}
+.controls input.grow{flex:1;min-width:200px}
+.controls button{cursor:pointer;transition:all .2s}
+.controls button:hover{border-color:var(--accent);color:var(--accent)}
+.btn-subtle{background:transparent !important;color:var(--muted) !important}
+.btn-subtle:hover{color:var(--ink) !important;border-color:var(--line) !important}
+
+/* Active Filters Strip */
+.active-bar{display:none;background:var(--surface-raised);border-bottom:1px solid var(--line);padding:.5rem var(--space);max-width:1600px;margin:0 auto;flex-wrap:wrap;gap:.4rem;align-items:center}
+.active-bar.show{display:flex}
+.active-chip{display:flex;align-items:center;gap:.35rem;font-size:.72rem;background:var(--bg);border:1px solid var(--accent-medium);color:var(--accent);padding:.15rem .55rem;border-radius:100px}
+.active-chip button{background:none;border:none;color:var(--accent);cursor:pointer;font-weight:700;padding:0;font-size:.85rem}
+.active-chip button:hover{color:#fff}
+.btn-clear-all{font-size:.72rem;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;margin-left:.5rem}
+.btn-clear-all:hover{color:var(--ink)}
+
+.view{display:none;padding-bottom:3rem}.view.active{display:block}
+.layout{max-width:1600px;margin:0 auto;padding:var(--space);display:grid;grid-template-columns:250px 1fr;gap:var(--space)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.sidebar{position:sticky;top:180px;align-self:start;max-height:calc(100vh - 200px);overflow-y:auto}
+.facet{margin-bottom:1.1rem}
+.facet h3{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem;font-weight:600}
+.facet label{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted);cursor:pointer;padding:.15rem 0}
+.facet label:hover{color:var(--ink)}
+.facet input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px}
+.facet .count{margin-left:auto;font-size:.72rem;opacity:.6}
+
+/* Grid & Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1rem;align-content:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem;display:flex;flex-direction:column;gap:.5rem;position:relative;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.card:hover{border-color:var(--accent-medium);transform:translateY(-2px);box-shadow:var(--shadow)}
+.card.family{border-left-color:var(--family)}
+.card.newcomer{border-left-color:var(--new)}
+.card.seen{opacity:.6}
+
+/* Card Header with Avatar & Action Buttons */
+.card-top{display:flex;gap:.75rem;align-items:flex-start}
+.card-avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--surface-raised),#2b2229);border:1px solid var(--accent-weak);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.card-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-initials{display:none;font-weight:700;font-size:.85rem;color:var(--accent);letter-spacing:1px}
+.card-avatar.no-img img{display:none}
+.card-avatar.no-img .avatar-initials{display:block}
+
+.card-title-group{flex:1;min-width:0;padding-right:70px}
+.card-name{font-family:"Playfair Display",serif;font-size:1.15rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{color:var(--muted);font-size:.72rem;margin-top:.15rem}
+
+.card-actions{position:absolute;top:10px;right:10px;display:flex;gap:.3rem;z-index:2}
+.btn-action{background:var(--surface-raised);border:1px solid var(--line);color:var(--muted);font-size:.65rem;font-weight:600;padding:.2rem .45rem;border-radius:100px;cursor:pointer;transition:all .2s}
+.btn-action:hover{border-color:var(--ink);color:var(--ink)}
+.btn-seen.seen{background:var(--seen-weak);color:var(--seen);border-color:rgba(94,226,156,0.35)}
+.btn-fav.fav{background:var(--fav-weak);color:var(--fav);border-color:rgba(245,158,11,0.4)}
+
+.flag-row{display:flex;flex-wrap:wrap;gap:.25rem}
+.flag{font-size:.62rem;font-weight:600;padding:.18rem .5rem;border-radius:100px}
+.flag.family{background:rgba(251,113,133,0.1);color:var(--family);border:1px solid rgba(251,113,133,0.3)}
+.flag.new{background:rgba(96,165,250,0.1);color:var(--new);border:1px solid rgba(96,165,250,0.3)}
+.flag.trophy{background:var(--accent-weak);color:var(--accent);border:1px solid var(--accent-medium)}
+
+.genre-chips{display:flex;flex-wrap:wrap;gap:.25rem}
+.genre-chip{font-size:.62rem;font-weight:600;padding:.18rem .5rem;border-radius:100px;background:rgba(94,226,156,0.08);color:var(--seen);border:1px solid rgba(94,226,156,0.25);cursor:pointer;font-family:inherit}
+.genre-chip:hover{background:rgba(94,226,156,0.18)}
+
+.scenes{font-size:.72rem;color:var(--muted);line-height:1.45}
+.scenes ul{list-style:none;margin-top:.2rem}
+.scenes li{padding:.18rem 0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:.4rem;flex-wrap:wrap}
+.scenes li:last-child{border-bottom:none}
+.scenes li b{color:var(--accent);font-weight:500}
+.scenes .find{margin-left:auto;font-size:.66rem;color:var(--seen);text-decoration:none;border:1px solid rgba(94,226,156,0.3);padding:.1rem .4rem;border-radius:100px}
+.scenes .find:hover{background:rgba(94,226,156,0.1)}
+
+.notes{font-size:.74rem;color:var(--muted);font-style:italic;line-height:1.45}
+.links{display:flex;gap:.4rem;margin-top:auto;padding-top:.4rem}
+.link{flex:1;text-align:center;padding:.35rem;border-radius:var(--radius-sm);text-decoration:none;font-size:.72rem;font-weight:500;background:var(--surface-raised);color:var(--ink);border:1px solid var(--line);transition:all .2s}
+.link:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.no-results{text-align:center;padding:3rem;color:var(--muted);grid-column:1/-1}
+.empty-state{text-align:center;padding:3rem;color:var(--muted)}
+.empty-state h2{color:var(--accent);margin-bottom:.5rem}
+.empty-state code{background:var(--surface-raised);padding:.2rem .5rem;border-radius:4px;font-size:.85rem}
+
+/* Scene shelf view */
+.shelf-view{max-width:1200px;margin:0 auto;padding:var(--space)}
+.shelf-view h2{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--accent);margin-bottom:.3rem}
+.shelf-view .sub{color:var(--muted);margin-bottom:1.2rem;font-size:.85rem}
+.shelf-controls{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem;background:var(--surface);padding:.7rem;border-radius:var(--radius-sm);border:1px solid var(--line)}
+.shelf-controls input{background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:.45rem .8rem;border-radius:100px;font-size:.82rem;flex:1;min-width:200px}
+.studio-pills{display:flex;gap:.35rem;flex-wrap:wrap;align-items:center}
+.studio-pill{background:var(--surface-raised);border:1px solid var(--line);color:var(--muted);font-size:.72rem;padding:.2rem .6rem;border-radius:100px;cursor:pointer;font-family:inherit;transition:all .2s}
+.studio-pill:hover{color:var(--ink);border-color:var(--accent)}
+.studio-pill.active{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+
+.shelf{margin-bottom:2.2rem;border-left:3px solid var(--accent-medium);padding-left:1rem}
+.shelf h3{font-family:"Playfair Display",serif;font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:.2rem}
+.shelf .shelf-meta{color:var(--muted);font-size:.72rem;margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.06em}
+.scene-row{display:flex;align-items:baseline;gap:.6rem;padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.85rem}
+.scene-row:last-child{border-bottom:none}
+.scene-row .who{color:var(--accent);font-weight:600;min-width:150px}
+.scene-row .what{flex:1;color:var(--ink)}
+.scene-row .studio{color:var(--muted);font-size:.72rem}
+.scene-row .go{font-size:.72rem;color:var(--seen);text-decoration:none;border:1px solid rgba(94,226,156,0.3);padding:.15rem .5rem;border-radius:100px;white-space:nowrap}
+.scene-row .go:hover{background:rgba(94,226,156,0.1)}
+.scroll-top{position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;background:var(--surface-raised);border:1px solid var(--line);color:var(--ink);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.1rem;z-index:99}
+.scroll-top.show{display:flex}
+
+/* Dossier Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .2s ease}
+.modal-backdrop.open{display:flex;opacity:1}
+.modal-dialog{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);max-width:680px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow);padding:1.6rem;display:flex;flex-direction:column;gap:1.1rem;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:var(--surface-raised);border:1px solid var(--line);color:var(--muted);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all .2s;z-index:5}
+.modal-close:hover{color:var(--ink);border-color:var(--accent)}
+
+.modal-header{display:flex;gap:1rem;align-items:center}
+.modal-avatar{width:70px;height:70px;border-radius:50%;overflow:hidden;background:var(--surface-raised);border:2px solid var(--accent);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.modal-avatar img{width:100%;height:100%;object-fit:cover}
+.modal-avatar.no-img img{display:none}
+.modal-avatar.no-img span{display:block;font-size:1.2rem;color:var(--accent);font-weight:700}
+.modal-avatar span{display:none}
+
+.modal-title{font-family:"Playfair Display",serif;font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1.2}
+.modal-meta{color:var(--muted);font-size:.85rem;margin-top:.2rem}
+.modal-section{display:flex;flex-direction:column;gap:.4rem}
+.modal-section h4{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:600}
+.modal-prose{font-size:.86rem;line-height:1.5;color:var(--ink);background:var(--surface-raised);padding:.8rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--line)}
+.modal-scenes-list{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.modal-scenes-list li{background:var(--surface-raised);border:1px solid var(--line);padding:.5rem .8rem;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;font-size:.84rem}
+.modal-scenes-list li b{color:var(--ink)}
+.modal-scenes-list li .studio{color:var(--muted);font-size:.75rem}
+.modal-footer-links{display:flex;gap:.6rem;margin-top:.4rem}
+.modal-footer-links a{flex:1;text-align:center;padding:.5rem;border-radius:var(--radius-sm);font-weight:600;font-size:.82rem;text-decoration:none}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--surface-raised);color:var(--ink);border:1px solid var(--line)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Netflix-Style Recommendation Matrix Grid */
+.modal-recs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem}
+.modal-rec-card{background:var(--surface-raised);border:1px solid var(--line);border-radius:var(--radius-sm);padding:0.6rem 0.4rem;text-align:center;cursor:pointer;transition:all .2s;position:relative;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:inherit}
+.modal-rec-card:hover{border-color:var(--accent);background:rgba(212,168,83,0.08);transform:translateY(-2px)}
+.modal-rec-avatar{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--accent);overflow:hidden;margin-bottom:0.35rem;position:relative}
+.modal-rec-avatar img{width:100%;height:100%;object-fit:cover}
+.modal-rec-name{font-size:0.75rem;font-weight:700;color:var(--ink);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-rec-match{position:absolute;top:2px;right:2px;font-size:0.62rem;font-weight:800;background:rgba(94,226,156,0.9);color:#000;padding:1px 4px;border-radius:4px}
+
+/* Offline / Protocol Notice */
+.banner-alert{background:#3b181e;border:1px solid #f87171;color:#fecaca;padding:.8rem 1.2rem;border-radius:var(--radius-sm);margin:1rem auto;max-width:1600px;font-size:.84rem;display:none;line-height:1.4}
+.banner-alert b{color:#fff}
+.banner-alert code{background:rgba(0,0,0,0.4);padding:.15rem .4rem;border-radius:4px;color:#fca5a5}
+
+@media(max-width:600px){.grid{grid-template-columns:1fr}.scene-row{flex-wrap:wrap}.scene-row .who{min-width:0}.modal-dialog{padding:1.2rem}}
+</style>
+</head>
+<body>
+<header>
+<div class="header-inner">
+  <div><h1>Starlet Directory</h1><p id="subtitle">loading…</p></div>
+  <div class="stats" aria-live="polite">
+    <div class="stat"><b id="statTotal">0</b><span>Total</span></div>
+    <div class="stat"><b id="statFamily">0</b><span>Family</span></div>
+    <div class="stat"><b id="statNew">0</b><span>New</span></div>
+    <div class="stat"><b id="statFav">0</b><span>Favorites</span></div>
+    <div class="stat"><b id="statSeen">0</b><span>Seen</span></div>
+  </div>
+</div>
+</header>
+
+<div class="banner-alert" id="corsBanner">
+  <b>Local Server Required:</b> Browser security blocks reading <code>performers-tagged.json</code> directly over <code>file:///</code>. Launch via <code>start.bat</code> or run <code>python -m http.server 8000</code> in this folder, then open <a href="http://localhost:8000/starlet-directory-v5.html" style="color:#fff;text-decoration:underline">http://localhost:8000/starlet-directory-v5.html</a>.
+</div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-view="family" role="tab" data-key="1">Family <span class="pill" id="pillFamily">0</span></button>
+  <button class="tab" data-view="newcomers" role="tab" data-key="2">Newcomers <span class="pill" id="pillNew">0</span></button>
+  <button class="tab" data-view="scenes" role="tab" data-key="3">Family Scenes <span class="pill" id="pillScenes">0</span></button>
+  <button class="tab" data-view="favorites" role="tab" data-key="4">★ Favorites <span class="pill" id="pillFav">0</span></button>
+  <button class="tab" data-view="all" role="tab" data-key="5">All Performers (<span id="pillAll">0</span>)</button>
+</nav>
+
+<div class="controls">
+  <input type="text" id="q" class="grow" placeholder="Search name, studio, notes (or 'under 25', 'newcomer')... [Press /]" autocomplete="off">
+  <select id="sort">
+    <option value="name">Sort: Name (A-Z)</option>
+    <option value="newest">Sort: Newest debut</option>
+    <option value="oldest">Sort: Oldest debut</option>
+    <option value="age">Sort: Age</option>
+  </select>
+  <button id="resetFilters">Clear filters</button>
+  <button id="btnExport" class="btn-subtle" title="Export Seen & Favorites data to JSON">Export Data</button>
+  <button id="btnImport" class="btn-subtle" title="Import Seen & Favorites data from JSON">Import Data</button>
+  <input type="file" id="fileImport" accept=".json" style="display:none">
+</div>
+
+<div class="active-bar" id="activeBar"></div>
+
+<section class="view active" id="view-family">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Filters"></aside>
+    <main><div id="grid-family" class="grid"></div></main>
+  </div>
+</section>
+
+<section class="view" id="view-newcomers">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar-new" aria-label="Filters"></aside>
+    <main><div id="grid-new" class="grid"></div></main>
+  </div>
+</section>
+
+<section class="view" id="view-favorites">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar-fav" aria-label="Filters"></aside>
+    <main><div id="grid-fav" class="grid"></div></main>
+  </div>
+</section>
+
+<section class="view" id="view-all">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar-all" aria-label="Filters"></aside>
+    <main><div id="grid-all" class="grid"></div></main>
+  </div>
+</section>
+
+<section class="view" id="view-scenes">
+  <div class="shelf-view">
+    <h2>Family Scenes Shelf</h2>
+    <p class="sub">Filter by studio or search verified scene titles across the entire collection.</p>
+    <div class="shelf-controls">
+      <input type="text" id="sceneShelfQ" placeholder="Filter scenes by title or starlet...">
+      <div class="studio-pills" id="studioPills"></div>
+    </div>
+    <div id="shelfBody"></div>
+  </div>
+</section>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<!-- Performer Dossier Modal -->
+<div id="dossierModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalPerformerName">
+  <div class="modal-dialog">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+    <div class="modal-header">
+      <div class="modal-avatar" id="modalAvatar">
+        <img id="modalAvatarImg" src="" alt="">
+        <span id="modalAvatarInitials"></span>
+      </div>
+      <div>
+        <h2 class="modal-title" id="modalPerformerName"></h2>
+        <div class="modal-meta" id="modalMeta"></div>
+        <div style="display:flex;gap:.4rem;margin-top:.4rem">
+          <button type="button" class="btn-action" id="modalBtnFav">☆ Favorite</button>
+          <button type="button" class="btn-action" id="modalBtnSeen">+ Seen</button>
+        </div>
+      </div>
+    </div>
+    <div class="flag-row" id="modalFlags"></div>
+    <div class="genre-chips" id="modalGenres"></div>
+    <div class="modal-section" id="modalBioSection">
+      <h4>Biography & Notes</h4>
+      <div class="modal-prose" id="modalBio"></div>
+    </div>
+    <div class="modal-section" id="modalScenesSection">
+      <h4>All Scenes (<span id="modalSceneCount">0</span>)</h4>
+      <ul class="modal-scenes-list" id="modalScenesList"></ul>
+    </div>
+    <div class="modal-section" id="modalRecsSection" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h4>More Like This</h4>
+        <span style="font-size:0.7rem;color:#5ee29c;font-weight:600">Cosine Matrix Engine</span>
+      </div>
+      <div class="modal-recs-grid" id="modalRecsGrid"></div>
+    </div>
+    <div class="modal-footer-links">
+      <a class="btn-primary" id="modalFpoLink" target="_blank" rel="noopener noreferrer">Search FPO Catalog</a>
+      <a class="btn-secondary" id="modalBpdLink" target="_blank" rel="noopener noreferrer">View on Babepedia</a>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const STORAGE_KEY_SEEN = 'starlet_seen_v5';
+const STORAGE_KEY_FAV  = 'starlet_fav_v5';
+
+const GENRE_LABELS = {
+  stepmom:'Stepmom', stepsis:'Stepsis', stepdaughter:'Stepdaughter', stepdad:'Stepdad', stepbro:'Stepbrother',
+  mom:'Mom / MILF', family:'Family (general)', birthday:'Birthday Gift', persuasion:'Persuasion',
+  permission:'Permission', 'shared-bed':'Shared Bed', swap:'Swap', cheating:'Cheating', blackmail:'Blackmail',
+  study:'Study Help', sensory:'Sensory Play', siblings:'Siblings', caught:'Caught', sleepover:'Sleepover', vacation:'Vacation',
+};
+const FAMILY_GENRES = new Set(['stepmom','stepsis','stepdaughter','stepdad','stepbro','mom','family','siblings']);
+const NEWCOMER_YEARS = 3;
+const CURRENT_YEAR = new Date().getFullYear();
+
+const state = {
+  data: [],
+  byId: new Map(),
+  similarityMatrix: {},
+  seen: new Set(),
+  fav: new Set(),
+  filters: {},
+  q: '',
+  sort: 'name',
+  sceneQ: '',
+  sceneStudio: 'all',
+  activeRecord: null,
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const debounce = (fn, ms=150) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+function loadUserData(){
+  try {
+    const rawSeen = localStorage.getItem(STORAGE_KEY_SEEN);
+    if (rawSeen) state.seen = new Set(JSON.parse(rawSeen));
+  } catch { state.seen = new Set(); }
+  try {
+    const rawFav = localStorage.getItem(STORAGE_KEY_FAV);
+    if (rawFav) state.fav = new Set(JSON.parse(rawFav));
+  } catch { state.fav = new Set(); }
+  updateHeaderStats();
+}
+
+function saveUserData(){
+  try { localStorage.setItem(STORAGE_KEY_SEEN, JSON.stringify([...state.seen])); } catch {}
+  try { localStorage.setItem(STORAGE_KEY_FAV, JSON.stringify([...state.fav])); } catch {}
+  updateHeaderStats();
+}
+
+function updateHeaderStats(){
+  $('statSeen').textContent = state.seen.size;
+  $('statFav').textContent = state.fav.size;
+  $('pillFav').textContent = state.fav.size;
+}
+
+/* Real-title filter: reject placeholder descriptions */
+const PLACEHOLDER_RX = /\b(feature|series|scenes?|content|catalog|debut|work|showcase|breakout|classics?|favorites?|scenarios?|features?|appearances?|collabs?|compilations?)\b/i;
+function isRealTitle(t){
+  if (!t) return false;
+  const s = String(t).trim();
+  if (s.length < 6) return false;
+  const hasSignal = /\d{4}/.test(s) || /[""''].+[""'']/.test(s) || /\b(Ep\.?|Episode|Vol\.?|Part)\b/i.test(s) || /:/.test(s);
+  if (PLACEHOLDER_RX.test(s) && !hasSignal) return false;
+  return true;
+}
+
+function isFamily(r){
+  if ((r.genres||[]).some(g => FAMILY_GENRES.has(g))) return true;
+  if ((Array.isArray(r.tier) ? r.tier : [r.tier].filter(Boolean)).some(t => /family|milf|mom|step|birthday|persuasion|permission|study|swap|bedshare/i.test(t))) return true;
+  const prose = [r.notes, r.expanded, ...(r.tags||[]), ...(r.badges||[]), ...(r.awards||[])].join(' ').toLowerCase();
+  return /\b(family|stepmom|stepsis|stepdaughter|stepdad|stepbro|milf|momswap|mom\s*swap|dadcrush|family\s*swap|taboo|family\s*member|mom\b)/i.test(prose);
+}
+
+function isNewcomer(r){
+  const from = r.active?.from;
+  if (!from) return false;
+  return (CURRENT_YEAR - from) <= NEWCOMER_YEARS;
+}
+
+function realScenes(r){
+  return (r.scenes||[]).filter(s => isRealTitle(s.title));
+}
+
+async function loadData(){
+  try {
+    const [res, simRes] = await Promise.all([
+      fetch('performers-tagged.json', { cache: 'no-cache' }),
+      fetch('similarity-matrix.json', { cache: 'no-cache' }).catch(() => null)
+    ]);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('not an array');
+    state.data = data;
+    state.byId = new Map(data.map(p => [p.id, p]));
+    if (simRes && simRes.ok) {
+      try {
+        state.similarityMatrix = await simRes.json();
+      } catch (err) {}
+    }
+    const famN = data.filter(isFamily).length;
+    const newN = data.filter(isNewcomer).length;
+    const sceneN = data.reduce((n, r) => n + realScenes(r).length, 0);
+    $('subtitle').textContent = `${data.length} performers · ${famN} family · ${newN} newcomers · ${sceneN} real scenes`;
+    $('statTotal').textContent = data.length;
+    $('statFamily').textContent = famN;
+    $('statNew').textContent = newN;
+    $('pillFamily').textContent = famN;
+    $('pillNew').textContent = newN;
+    $('pillScenes').textContent = sceneN;
+    $('pillAll').textContent = data.length;
+    return true;
+  } catch (e){
+    console.error('load failed:', e);
+    $('corsBanner').style.display = 'block';
+    $('subtitle').textContent = 'failed to load performers-tagged.json (see notice below)';
+    return false;
+  }
+}
+
+const FACETS = [
+  { id:'genre',       label:'Family Genre', get: r => (r.genres||[]).filter(g => FAMILY_GENRES.has(g)) },
+  { id:'hair',        label:'Hair',         get: r => r.hair ? [r.hair] : [] },
+  { id:'body',        label:'Body',         get: r => r.body ? [r.body] : [] },
+  { id:'ethnicity',   label:'Ethnicity',    get: r => r.ethnicity ? [r.ethnicity] : [] },
+  { id:'nationality', label:'Nationality',  get: r => r.nationality ? [r.nationality] : [] },
+  { id:'tier',        label:'Award Tier',   get: r => r.tier || [] },
+];
+
+/* Intelligent Query Parser */
+function passesIntelligentQuery(rec, qStr){
+  if (!qStr) return true;
+  let q = qStr.toLowerCase().trim();
+
+  // Age match: "under 25", "<25"
+  const underMatch = q.match(/\b(under|<)\s*(\d{2})\b/);
+  if (underMatch){
+    const maxAge = parseInt(underMatch[2], 10);
+    if (!rec.age || rec.age > maxAge) return false;
+    q = q.replace(underMatch[0], ' ').trim();
+  }
+
+  // Age match: "over 30", ">30"
+  const overMatch = q.match(/\b(over|>)\s*(\d{2})\b/);
+  if (overMatch){
+    const minAge = parseInt(overMatch[2], 10);
+    if (!rec.age || rec.age < minAge) return false;
+    q = q.replace(overMatch[0], ' ').trim();
+  }
+
+  // Newcomer intent
+  if (/\bnewcomers?\b/.test(q)){
+    if (!isNewcomer(rec)) return false;
+    q = q.replace(/\bnewcomers?\b/, ' ').trim();
+  }
+
+  // Family intent
+  if (/\bfamily\b/.test(q)){
+    if (!isFamily(rec)) return false;
+    q = q.replace(/\bfamily\b/, ' ').trim();
+  }
+
+  // Hair intent
+  const hairMatches = ['blonde', 'brunette', 'redhead', 'black-hair'];
+  for (const h of hairMatches){
+    const rx = new RegExp(`\\b${h.replace('-hair','')}\\b`);
+    if (rx.test(q)){
+      if (!rec.hair || !rec.hair.toLowerCase().includes(h.replace('-hair',''))) return false;
+      q = q.replace(rx, ' ').trim();
+    }
+  }
+
+  const tokens = q.split(/\s+/).filter(Boolean);
+  if (!tokens.length) return true;
+
+  const hay = [
+    rec.name, rec.notes, rec.expanded, rec.hair, rec.ethnicity, rec.nationality,
+    ...(rec.tags||[]), ...(rec.genres||[]),
+    ...(rec.scenes||[]).flatMap(s => [s.title, s.studio]),
+    ...(rec.awards||[]), ...(rec.badges||[]),
+  ].join(' ').toLowerCase();
+
+  return tokens.every(tok => hay.includes(tok));
+}
+
+function passesExcept(rec, skipFacetId){
+  for (const facet of FACETS){
+    if (facet.id === skipFacetId) continue;
+    const sel = state.filters[facet.id];
+    if (!sel?.size) continue;
+    const vals = (facet.get(rec) || []).map(v => String(v).toLowerCase());
+    if (!vals.some(v => sel.has(v))) return false;
+  }
+  return passesIntelligentQuery(rec, state.q);
+}
+
+function passes(rec){
+  return passesExcept(rec, null);
+}
+
+function buildFacets(targetId, pool){
+  const sidebar = $(targetId);
+  if (!sidebar) return;
+  sidebar.innerHTML = '';
+  for (const facet of FACETS){
+    const counts = new Map();
+    for (const rec of pool){
+      if (!passesExcept(rec, facet.id)) continue;
+      for (const v of facet.get(rec) || []){
+        const key = String(v).toLowerCase();
+        if (!key) continue;
+        counts.set(key, (counts.get(key) || 0) + 1);
+      }
+    }
+    if (!counts.size) continue;
+    const sorted = [...counts.entries()].sort((a,b) => b[1] - a[1]);
+    const div = document.createElement('div');
+    div.className = 'facet';
+    div.innerHTML = `<h3>${esc(facet.label)}</h3>`;
+    for (const [val, n] of sorted){
+      const id = `${targetId}-${facet.id}-${val.replace(/[^a-z0-9]+/g,'-')}`;
+      const label = GENRE_LABELS[val] || val.replace(/-/g,' ');
+      const checked = state.filters[facet.id]?.has(val) ? 'checked' : '';
+      div.insertAdjacentHTML('beforeend',
+        `<label for="${id}"><input type="checkbox" id="${id}" data-facet="${facet.id}" data-val="${esc(val)}" ${checked}><span>${esc(label)}</span><span class="count">${n}</span></label>`);
+    }
+    sidebar.appendChild(div);
+  }
+}
+
+function updateActiveBar(){
+  const bar = $('activeBar');
+  const chips = [];
+  if (state.q){
+    chips.push(`<span class="active-chip">Query: "${esc(state.q)}" <button type="button" data-clear="q" aria-label="Clear search query">&times;</button></span>`);
+  }
+  for (const [facet, vals] of Object.entries(state.filters)){
+    for (const v of vals){
+      const label = GENRE_LABELS[v] || v;
+      chips.push(`<span class="active-chip">${esc(label)} <button type="button" data-clear-facet="${esc(facet)}" data-val="${esc(v)}" aria-label="Remove filter">&times;</button></span>`);
+    }
+  }
+  if (chips.length){
+    bar.innerHTML = chips.join('') + `<button type="button" class="btn-clear-all" id="btnClearAllActive">Clear all</button>`;
+    bar.classList.add('show');
+  } else {
+    bar.innerHTML = '';
+    bar.classList.remove('show');
+  }
+}
+
+function sortRecs(a, b){
+  switch (state.sort){
+    case 'newest': return (b.active?.from||0) - (a.active?.from||0);
+    case 'oldest': return (a.active?.from||9999) - (b.active?.from||9999);
+    case 'age':    return (a.age||999) - (b.age||999);
+    default:       return a.name.localeCompare(b.name);
+  }
+}
+
+function cardHTML(r){
+  const seen = state.seen.has(r.id);
+  const fav  = state.fav.has(r.id);
+  const fam  = isFamily(r);
+  const nw   = isNewcomer(r);
+  const yrs  = r.active?.from ? CURRENT_YEAR - r.active.from : null;
+  const flags = [];
+  if (fam) flags.push(`<span class="flag family">Family</span>`);
+  if (nw)  flags.push(`<span class="flag new">New · ${r.active.from}</span>`);
+  if ((r.awards||[]).some(a => /win|year|award|goat/i.test(a))) flags.push(`<span class="flag trophy">Award</span>`);
+
+  const genres = (r.genres||[]).filter(g => FAMILY_GENRES.has(g))
+    .map(g => `<button type="button" class="genre-chip" data-genre="${esc(g)}">${esc(GENRE_LABELS[g] || g)}</button>`).join('');
+
+  const scenes = realScenes(r);
+  const scenesHTML = scenes.length
+    ? `<div class="scenes"><b>Scenes (${scenes.length}):</b><ul>${scenes.slice(0,3).map(s => {
+        const targetUrl = s.url || `https://www.fpo.xxx/search/${encodeURIComponent(r.name.toLowerCase().replace(/\s+/g,'-'))}/`;
+        const actionLabel = s.url ? 'watch ▶' : 'find →';
+        return `<li><b>${esc(s.title)}</b>${s.studio ? ' · ' + esc(s.studio) : ''}${s.duration ? ' <span style="font-family:monospace;font-size:0.65rem;background:rgba(255,255,255,0.06);padding:1px 4px;border-radius:3px">' + esc(s.duration) + '</span>' : ''}<a class="find" href="${targetUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${actionLabel}</a></li>`;
+      }).join('')}</ul></div>`
+    : '';
+
+  const yearLabel = r.active?.label || (r.active?.from ? (r.active.to ? `${r.active.from}–${r.active.to}` : `${r.active.from}+`) : '—');
+  const fpoUrl = `https://www.fpo.xxx/search/${encodeURIComponent(r.name)}/`;
+  const bpd = r.links?.babepedia ? `https://www.babepedia.com/babe/${encodeURIComponent(r.links.babepedia.replace(/\s+/g,'_'))}` : null;
+  const cdnImg = `https://www.babepedia.com/pics/${encodeURIComponent(r.name.replace(/\s+/g,'_'))}.jpg`;
+  const initials = r.name.split(' ').map(w => w[0]).slice(0,2).join('');
+
+  return `<article class="card${fam?' family':''}${nw?' newcomer':''}${seen?' seen':''}" data-id="${esc(r.id)}">
+    <div class="card-actions">
+      <button type="button" class="btn-action btn-fav${fav?' fav':''}" data-action="toggle-fav" title="${fav?'Remove from favorites':'Add to favorites'}">${fav ? '★' : '☆'}</button>
+      <button type="button" class="btn-action btn-seen${seen?' seen':''}" data-action="toggle-seen" title="${seen?'Mark unseen':'Mark seen'}">${seen ? '✓ Seen' : '+ Seen'}</button>
+    </div>
+    <div class="card-top">
+      <div class="card-avatar">
+        <img src="avatars/${esc(r.id)}.jpg" alt="${esc(r.name)}" loading="lazy" onerror="if (this.src.endsWith('.jpg')) { this.src='avatars/${esc(r.id)}.svg'; } else if (this.src.endsWith('.svg')) { this.src='${cdnImg}'; } else { this.parentElement.classList.add('no-img'); }">
+        <span class="avatar-initials">${esc(initials)}</span>
+      </div>
+      <div class="card-title-group">
+        <div class="card-name">${esc(r.name)}</div>
+        <div class="card-meta">${r.age ? 'Age ' + esc(r.age) : 'Age ?'} · ${esc(yearLabel)}${r.height ? ' · ' + esc(r.height) : ''}${yrs !== null && yrs <= NEWCOMER_YEARS ? ' · ' + yrs + 'y in' : ''}</div>
+      </div>
+    </div>
+    ${flags.length ? `<div class="flag-row">${flags.join('')}</div>` : ''}
+    ${genres ? `<div class="genre-chips">${genres}</div>` : ''}
+    ${scenesHTML}
+    <div class="links">
+      <a class="link" href="${fpoUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">FPO search</a>
+      ${bpd ? `<a class="link" href="${bpd}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Babepedia</a>` : ''}
+    </div>
+  </article>`;
+}
+
+function openDossier(r){
+  if (!r) return;
+  state.activeRecord = r;
+  $('modalPerformerName').textContent = r.name;
+  const metaParts = [];
+  if (r.age) metaParts.push(`Age ${r.age}`);
+  if (r.active?.label) metaParts.push(r.active.label);
+  else if (r.active?.from) metaParts.push(r.active.to ? `${r.active.from}–${r.active.to}` : `Active ${r.active.from}+`);
+  if (r.nationality) metaParts.push(r.nationality);
+  if (r.ethnicity) metaParts.push(r.ethnicity);
+  if (r.hair) metaParts.push(r.hair);
+  if (r.body) metaParts.push(r.body);
+  if (r.height) metaParts.push(r.height);
+  $('modalMeta').textContent = metaParts.join(' · ');
+
+  // Avatar in modal
+  const avImg = $('modalAvatarImg');
+  const avBox = $('modalAvatar');
+  avBox.classList.remove('no-img');
+  avImg.src = `avatars/${r.id}.jpg`;
+  avImg.onerror = () => {
+    if (avImg.src.endsWith('.jpg')) {
+      avImg.src = `avatars/${r.id}.svg`;
+    } else if (avImg.src.endsWith('.svg')) {
+      avImg.src = `https://www.babepedia.com/pics/${encodeURIComponent(r.name.replace(/\s+/g,'_'))}.jpg`;
+    } else {
+      avBox.classList.add('no-img');
+    }
+  };
+  $('modalAvatarInitials').textContent = r.name.split(' ').map(w => w[0]).slice(0,2).join('');
+
+  // Modal actions
+  const isFav = state.fav.has(r.id);
+  const isSeen = state.seen.has(r.id);
+  $('modalBtnFav').textContent = isFav ? '★ Favorited' : '☆ Favorite';
+  $('modalBtnFav').classList.toggle('fav', isFav);
+  $('modalBtnSeen').textContent = isSeen ? '✓ Seen' : '+ Mark Seen';
+  $('modalBtnSeen').classList.toggle('seen', isSeen);
+
+  const flags = [];
+  if (isFamily(r)) flags.push(`<span class="flag family">Family</span>`);
+  if (isNewcomer(r)) flags.push(`<span class="flag new">Newcomer (${r.active?.from})</span>`);
+  for (const aw of (r.awards || [])) flags.push(`<span class="flag trophy">${esc(aw)}</span>`);
+  for (const bg of (r.badges || [])) flags.push(`<span class="flag" style="background:var(--surface-raised);border:1px solid var(--line);color:var(--ink)">${esc(bg)}</span>`);
+  $('modalFlags').innerHTML = flags.join('');
+
+  $('modalGenres').innerHTML = (r.genres || []).map(g => `<span class="genre-chip">${esc(GENRE_LABELS[g] || g)}</span>`).join('');
+
+  const bioText = r.expanded || r.notes || 'No extended notes recorded for this performer.';
+  $('modalBio').textContent = bioText;
+
+  const scenes = r.scenes || [];
+  $('modalSceneCount').textContent = scenes.length;
+  if (scenes.length){
+    $('modalScenesSection').style.display = 'flex';
+    $('modalScenesList').innerHTML = scenes.map(s => {
+      const targetUrl = s.url || `https://www.fpo.xxx/search/${encodeURIComponent(r.name.toLowerCase().replace(/\s+/g,'-'))}/`;
+      const actionLabel = s.url ? 'watch direct ▶' : 'find →';
+      return `<li><div><b>${esc(s.title || 'Untitled Scene')}</b>${s.studio ? `<div class="studio">${esc(s.studio)}</div>` : ''}${s.duration ? `<div style="font-size:0.7rem;color:var(--muted)">Duration: ${esc(s.duration)}${s.rating ? ' · Rating: ' + esc(s.rating) : ''}</div>` : ''}</div><a class="scenes find" style="margin-left:auto;background:rgba(94,226,156,0.15);font-weight:600" href="${targetUrl}" target="_blank" rel="noopener noreferrer">${actionLabel}</a></li>`;
+    }).join('');
+  } else {
+    $('modalScenesSection').style.display = 'none';
+  }
+
+  // Precomputed Cosine Similarity Matrix Recommendations
+  const recs = (state.similarityMatrix && state.similarityMatrix[r.id]) || [];
+  if (recs.length) {
+    $('modalRecsSection').style.display = 'flex';
+    $('modalRecsGrid').innerHTML = recs.slice(0, 4).map(rec => {
+      const matchStarlet = state.byId.get(rec.id);
+      if (!matchStarlet) return '';
+      const av = `./avatars/${rec.id}.jpg`;
+      const fallbackAv = `./avatars/${rec.id}.svg`;
+      const pct = rec.matchPct || Math.round((rec.score || 0.7) * 100);
+      return `<div class="modal-rec-card" onclick="openDossier(state.byId.get('${rec.id}'))"><span class="modal-rec-match">${pct}%</span><div class="modal-rec-avatar"><img src="${av}" alt="${esc(matchStarlet.name)}" onerror="this.src='${fallbackAv}'"></div><div class="modal-rec-name">${esc(matchStarlet.name)}</div><div style="font-size:0.65rem;color:var(--muted)">${matchStarlet.active?.label || 'Starlet'}</div></div>`;
+    }).join('');
+  } else {
+    $('modalRecsSection').style.display = 'none';
+  }
+
+  $('modalFpoLink').href = `https://www.fpo.xxx/search/${encodeURIComponent(r.name)}/`;
+  if (r.links?.babepedia){
+    $('modalBpdLink').style.display = 'inline-block';
+    $('modalBpdLink').href = `https://www.babepedia.com/babe/${encodeURIComponent(r.links.babepedia.replace(/\s+/g,'_'))}`;
+  } else {
+    $('modalBpdLink').style.display = 'none';
+  }
+
+  $('dossierModal').classList.add('open');
+}
+
+function closeDossier(){
+  $('dossierModal').classList.remove('open');
+  state.activeRecord = null;
+}
+
+function renderGrid(gridId, pool){
+  const filtered = pool.filter(passes).sort(sortRecs);
+  const grid = $(gridId);
+  grid.innerHTML = filtered.length
+    ? filtered.map(cardHTML).join('')
+    : `<div class="no-results">No performers match the current filters.</div>`;
+
+  grid.onclick = e => {
+    const chip = e.target.closest('.genre-chip');
+    if (chip){
+      e.stopPropagation();
+      if (!state.filters.genre) state.filters.genre = new Set();
+      state.filters.genre.add(chip.dataset.genre);
+      renderAll();
+      return;
+    }
+    const favBtn = e.target.closest('[data-action="toggle-fav"]');
+    if (favBtn){
+      e.stopPropagation();
+      const card = favBtn.closest('.card');
+      const id = card.dataset.id;
+      if (state.fav.has(id)) {
+        state.fav.delete(id);
+        favBtn.classList.remove('fav');
+        favBtn.textContent = '☆';
+      } else {
+        state.fav.add(id);
+        favBtn.classList.add('fav');
+        favBtn.textContent = '★';
+      }
+      saveUserData();
+      renderAll();
+      return;
+    }
+    const seenBtn = e.target.closest('[data-action="toggle-seen"]');
+    if (seenBtn){
+      e.stopPropagation();
+      const card = seenBtn.closest('.card');
+      const id = card.dataset.id;
+      if (state.seen.has(id)) {
+        state.seen.delete(id);
+        seenBtn.classList.remove('seen');
+        seenBtn.textContent = '+ Seen';
+        card.classList.remove('seen');
+      } else {
+        state.seen.add(id);
+        seenBtn.classList.add('seen');
+        seenBtn.textContent = '✓ Seen';
+        card.classList.add('seen');
+      }
+      saveUserData();
+      return;
+    }
+    const card = e.target.closest('.card');
+    if (!card || e.target.closest('a')) return;
+    const rec = state.byId.get(card.dataset.id);
+    if (rec) openDossier(rec);
+  };
+}
+
+function renderAll(){
+  const famPool = state.data.filter(isFamily);
+  const newPool = state.data.filter(isNewcomer);
+  const favPool = state.data.filter(r => state.fav.has(r.id));
+  const allPool = state.data;
+
+  updateActiveBar();
+
+  buildFacets('sidebar', famPool);
+  buildFacets('sidebar-new', newPool);
+  buildFacets('sidebar-fav', favPool);
+  buildFacets('sidebar-all', allPool);
+
+  renderGrid('grid-family', famPool);
+  renderGrid('grid-new', newPool);
+  renderGrid('grid-fav', favPool);
+  renderGrid('grid-all', allPool);
+}
+
+function renderScenes(){
+  const byGenre = {};
+  const studios = new Set();
+  let total = 0;
+
+  for (const r of state.data){
+    for (const s of realScenes(r)){
+      if (s.studio) studios.add(s.studio.split(/[\(/&]/)[0].trim());
+      const gs = (s.genres && s.genres.length) ? s.genres : (r.genres||[]).filter(g => FAMILY_GENRES.has(g));
+      for (const g of gs){
+        if (!FAMILY_GENRES.has(g)) continue;
+        if (!byGenre[g]) byGenre[g] = [];
+        byGenre[g].push({ performer: r.name, ...s });
+        total++;
+      }
+    }
+  }
+
+  // Populate studio pills
+  const topStudios = ['Brazzers', 'TeamSkeet', 'Nubiles', 'Pure Taboo', 'Family Strokes', 'Deeper', 'Vixen', 'Blacked', 'Private', 'Marc Dorcel'];
+  const studioPills = $('studioPills');
+  if (studioPills){
+    studioPills.innerHTML = `<button type="button" class="studio-pill${state.sceneStudio==='all'?' active':''}" data-studio="all">All Studios</button>` +
+      topStudios.map(st => `<button type="button" class="studio-pill${state.sceneStudio===st.toLowerCase()?' active':''}" data-studio="${esc(st.toLowerCase())}">${esc(st)}</button>`).join('');
+  }
+
+  const body = $('shelfBody');
+  const order = Object.keys(GENRE_LABELS).filter(g => FAMILY_GENRES.has(g) && byGenre[g]?.length);
+  if (!order.length){
+    body.innerHTML = `<div class="empty-state"><h2>No real family scenes found</h2>
+      <p>Your data has ${state.data.length} performers. Run <code>node tag-genres.mjs</code> to refresh genres.</p></div>`;
+    return;
+  }
+
+  const sq = state.sceneQ.toLowerCase().trim();
+  const selStudio = state.sceneStudio.toLowerCase();
+
+  let renderedBlocks = '';
+  for (const g of order){
+    let scenes = byGenre[g];
+    if (selStudio !== 'all'){
+      scenes = scenes.filter(s => (s.studio||'').toLowerCase().includes(selStudio));
+    }
+    if (sq){
+      scenes = scenes.filter(s => (s.title||'').toLowerCase().includes(sq) || (s.performer||'').toLowerCase().includes(sq));
+    }
+    if (!scenes.length) continue;
+
+    const rows = scenes.slice(0, 50).map(s => {
+      const targetUrl = s.url || `https://www.fpo.xxx/search/${encodeURIComponent(s.performer.toLowerCase().replace(/\s+/g,'-'))}/`;
+      const actionLabel = s.url ? 'watch direct ▶' : 'find →';
+      return `<div class="scene-row">
+        <span class="who">${esc(s.performer)}</span>
+        <span class="what"><b>${esc(s.title)}</b>${s.duration ? ' <span style="font-size:0.7rem;color:var(--muted)">(' + esc(s.duration) + ')</span>' : ''}</span>
+        <span class="studio">${esc(s.studio || '')}</span>
+        <a class="go" href="${targetUrl}" target="_blank" rel="noopener noreferrer">${actionLabel}</a>
+      </div>`;
+    }).join('');
+    renderedBlocks += `<div class="shelf"><h3>${esc(GENRE_LABELS[g])}</h3><div class="shelf-meta">${scenes.length} scene${scenes.length===1?'':'s'}</div>${rows}</div>`;
+  }
+
+  body.innerHTML = renderedBlocks || `<div class="no-results">No scenes matched the selected studio or filter.</div>`;
+}
+
+function exportData(){
+  const payload = {
+    seen: [...state.seen],
+    favorites: [...state.fav],
+    exportedAt: new Date().toISOString(),
+    version: 5
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `starlet-userdata-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(e){
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const json = JSON.parse(ev.target.result);
+      if (Array.isArray(json.seen)) state.seen = new Set(json.seen);
+      if (Array.isArray(json.favorites)) state.fav = new Set(json.favorites);
+      saveUserData();
+      renderAll();
+      alert(`Import successful: ${state.seen.size} seen, ${state.fav.size} favorites loaded.`);
+    } catch (err){
+      alert('Failed to parse backup JSON file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function wire(){
+  $('q').addEventListener('input', debounce(e => { state.q = e.target.value; renderAll(); }));
+  $('sort').addEventListener('change', e => { state.sort = e.target.value; renderAll(); });
+
+  $('sceneShelfQ')?.addEventListener('input', debounce(e => { state.sceneQ = e.target.value; renderScenes(); }));
+  $('studioPills')?.addEventListener('click', e => {
+    const btn = e.target.closest('.studio-pill');
+    if (!btn) return;
+    state.sceneStudio = btn.dataset.studio;
+    document.querySelectorAll('.studio-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderScenes();
+  });
+
+  document.querySelectorAll('.sidebar').forEach(sb => {
+    sb.addEventListener('change', e => {
+      const cb = e.target.closest('input[data-facet]');
+      if (!cb) return;
+      const { facet, val } = cb.dataset;
+      if (!state.filters[facet]) state.filters[facet] = new Set();
+      if (cb.checked) state.filters[facet].add(val);
+      else state.filters[facet].delete(val);
+      renderAll();
+    });
+  });
+
+  $('resetFilters').addEventListener('click', () => {
+    state.filters = {};
+    state.q = '';
+    $('q').value = '';
+    state.sort = 'name';
+    $('sort').value = 'name';
+    document.querySelectorAll('.sidebar input[type=checkbox]').forEach(cb => cb.checked = false);
+    renderAll();
+  });
+
+  $('activeBar').addEventListener('click', e => {
+    if (e.target.dataset.clear === 'q'){
+      state.q = '';
+      $('q').value = '';
+      renderAll();
+      return;
+    }
+    if (e.target.dataset.clearFacet){
+      const facet = e.target.dataset.clearFacet;
+      const val = e.target.dataset.val;
+      if (state.filters[facet]){
+        state.filters[facet].delete(val);
+        if (!state.filters[facet].size) delete state.filters[facet];
+      }
+      renderAll();
+      return;
+    }
+    if (e.target.id === 'btnClearAllActive'){
+      $('resetFilters').click();
+    }
+  });
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('view-' + tab.dataset.view).classList.add('active');
+      window.scrollTo({ top:0, behavior:'smooth' });
+    });
+  });
+
+  $('modalClose').addEventListener('click', closeDossier);
+  $('dossierModal').addEventListener('click', e => {
+    if (e.target === $('dossierModal')) closeDossier();
+  });
+
+  // Global Keyboard Shortcuts
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){
+      if ($('dossierModal').classList.contains('open')) {
+        closeDossier();
+      } else if (document.activeElement === $('q')) {
+        $('q').value = '';
+        state.q = '';
+        renderAll();
+        $('q').blur();
+      }
+    }
+    if (e.key === '/' && document.activeElement !== $('q') && document.activeElement !== $('sceneShelfQ') && !$('dossierModal').classList.contains('open')){
+      e.preventDefault();
+      $('q').focus();
+    }
+    if (['1','2','3','4','5'].includes(e.key) && document.activeElement.tagName !== 'INPUT' && !$('dossierModal').classList.contains('open')){
+      const targetTab = document.querySelector(`.tab[data-key="${e.key}"]`);
+      if (targetTab) targetTab.click();
+    }
+  });
+
+  $('modalBtnFav').addEventListener('click', () => {
+    if (!state.activeRecord) return;
+    const id = state.activeRecord.id;
+    if (state.fav.has(id)) {
+      state.fav.delete(id);
+      $('modalBtnFav').classList.remove('fav');
+      $('modalBtnFav').textContent = '☆ Favorite';
+    } else {
+      state.fav.add(id);
+      $('modalBtnFav').classList.add('fav');
+      $('modalBtnFav').textContent = '★ Favorited';
+    }
+    saveUserData();
+    renderAll();
+  });
+
+  $('modalBtnSeen').addEventListener('click', () => {
+    if (!state.activeRecord) return;
+    const id = state.activeRecord.id;
+    if (state.seen.has(id)) {
+      state.seen.delete(id);
+      $('modalBtnSeen').classList.remove('seen');
+      $('modalBtnSeen').textContent = '+ Mark Seen';
+    } else {
+      state.seen.add(id);
+      $('modalBtnSeen').classList.add('seen');
+      $('modalBtnSeen').textContent = '✓ Seen';
+    }
+    saveUserData();
+    renderAll();
+  });
+
+  $('btnExport').addEventListener('click', exportData);
+  $('btnImport').addEventListener('click', () => $('fileImport').click());
+  $('fileImport').addEventListener('change', importData);
+
+  window.addEventListener('scroll', () => $('scrollTop').classList.toggle('show', window.scrollY > 400), { passive:true });
+  $('scrollTop').addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+}
+
+(async function boot(){
+  loadUserData();
+  const ok = await loadData();
+  if (!ok) return;
+  wire();
+  renderAll();
+  renderScenes();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "state": "COMPLETED",
+  "totalInQueue": 1027,
+  "processed": 1027,
+  "percentage": "100%",
+  "avatarsFetched": 1010,
+  "scenesEnriched": 384,
+  "totalElapsedSeconds": 594,
+  "completedAt": "2026-10-31T04:48:24.866Z"
+}

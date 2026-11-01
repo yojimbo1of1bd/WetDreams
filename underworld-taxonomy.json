@@ -1,0 +1,562 @@
+{
+  "system": {
+    "name": "The Ciphered Underworld",
+    "version": "1.0.0",
+    "description": "Deterministic secret domain & scenario taxonomy with Tier 1 and Tier 2 + Reddit crush separation.",
+    "ciphers": {
+      "pc_commands": {
+        "harem": "master_hub",
+        "underworld": "master_hub",
+        "elysium": "master_hub",
+        "valhalla": "master_hub",
+        "tier1": "domain_tier1",
+        "soft": "domain_tier1",
+        "tier2": "domain_tier2",
+        "reddit": "domain_tier2",
+        "holidays": "domain_gifting_holidays",
+        "gifts": "domain_gifting_holidays",
+        "bets": "domain_games_bets",
+        "leverage": "domain_games_bets",
+        "family": "domain_family_archetypes",
+        "kinship": "domain_family_archetypes",
+        "escalation": "domain_permission_escalation",
+        "permission": "domain_permission_escalation",
+        "church": "domain_institutional_niche",
+        "nun": "domain_institutional_niche",
+        "hardcore": "domain_hardcore_dynamics",
+        "swap": "domain_family_archetypes",
+        "swaps": "domain_family_archetypes",
+        "cuck": "domain_family_archetypes",
+        "cuckold": "domain_family_archetypes",
+        "hotwife": "domain_family_archetypes",
+        "orgy": "domain_hardcore_dynamics",
+        "orgies": "domain_hardcore_dynamics",
+        "gangbang": "domain_hardcore_dynamics",
+        "train": "domain_hardcore_dynamics",
+        "anal": "domain_hardcore_dynamics",
+        "facial": "domain_hardcore_dynamics",
+        "facials": "domain_hardcore_dynamics",
+        "study": "domain_games_bets",
+        "tutor": "domain_games_bets",
+        "abyss": "domain_abyssal_nasty",
+        "nasty": "domain_abyssal_nasty",
+        "deep": "domain_abyssal_nasty",
+        "depraved": "domain_abyssal_nasty",
+        "chores": "domain_games_bets",
+        "points": "domain_games_bets",
+        "point": "domain_games_bets",
+        "freeuse": "domain_games_bets"
+      },
+      "gesture_symbols": {
+        "two_circles": {
+          "symbol": "◯◯",
+          "name": "Continuous Two Circles (Figure 8 / Infinity)",
+          "target": "master_hub",
+          "description": "Unlocks the central Underworld Master Hub"
+        },
+        "star": {
+          "symbol": "★",
+          "name": "Five-Point Star",
+          "target": "domain_tier1",
+          "description": "Unlocks Tier 1 (Soft / Girl-Next-Door Sanctum)"
+        },
+        "dashed_line": {
+          "symbol": "- - -",
+          "name": "Dashed / Broken Line (Morse Line)",
+          "target": "domain_tier2",
+          "description": "Unlocks Tier 2 (Reddit Crushes & Cult Glamour Sanctum)"
+        },
+        "triangle": {
+          "symbol": "△",
+          "name": "Equilateral Triangle",
+          "target": "domain_games_bets",
+          "description": "Unlocks Games, Bets & Strategic Leverage"
+        },
+        "continuous_line": {
+          "symbol": "──",
+          "name": "Single Continuous Horizontal Line",
+          "target": "domain_gifting_holidays",
+          "description": "Unlocks Gifting, Wrapping & Holiday Offerings"
+        }
+      }
+    }
+  },
+  "domains": {
+    "gifting_holidays": {
+      "id": "domain_gifting_holidays",
+      "title": "Gifting, Wrapping & Holiday Offerings",
+      "cipherKey": "holidays",
+      "icon": "Gift",
+      "description": "Seasonal rituals, wrapped presents, surprise exchanges, and celebratory offerings across the calendar year.",
+      "subdomains": [
+        {
+          "id": "christmas",
+          "title": "Christmas & New Year Eve",
+          "icon": "TreePine",
+          "keywords": ["christmas", "xmas", "santa", "mistletoe", "holiday", "stocking", "wrapping", "present", "new year"],
+          "regex": "\\b(christmas|xmas|santa|mistletoe|stocking|present|unwrap|wrapping|holiday\\s*gift)\\b"
+        },
+        {
+          "id": "thanksgiving",
+          "title": "Thanksgiving Gathering",
+          "icon": "Utensils",
+          "keywords": ["thanksgiving", "turkey", "family dinner", "gratitude", "home for thanksgiving"],
+          "regex": "\\b(thanksgiving|turkey\\s*day|family\\s*dinner|thanksgiving\\s*break)\\b"
+        },
+        {
+          "id": "halloween",
+          "title": "Halloween & Masked Costumes",
+          "icon": "Ghost",
+          "keywords": ["halloween", "costume", "trick or treat", "spooky", "witch", "maid costume", "cosplay", "mask"],
+          "regex": "\\b(halloween|costume|trick\\s*or\\s*treat|witch|mask|dressed\\s*up)\\b"
+        },
+        {
+          "id": "st_patricks",
+          "title": "Saint Patrick's Day",
+          "icon": "Clover",
+          "keywords": ["st patrick", "saint patrick", "green dress", "irish", "luck"],
+          "regex": "\\b(st\\.?\\s*patrick|saint\\s*patrick|irish|green\\s*outfit)\\b"
+        },
+        {
+          "id": "fourth_of_july",
+          "title": "4th of July & Summer Cabin",
+          "icon": "Sparkles",
+          "keywords": ["4th of july", "fourth of july", "independence day", "lake house", "barbecue", "summer break"],
+          "regex": "\\b(4th\\s*of\\s*july|fourth\\s*of\\s*july|independence\\s*day|summer\\s*cabin)\\b"
+        },
+        {
+          "id": "valentines_day",
+          "title": "Valentine's Day & Sweethearts",
+          "icon": "Heart",
+          "keywords": ["valentine", "valentines", "sweetheart", "lingerie", "cupid", "roses", "chocolate"],
+          "regex": "\\b(valentine|valentines|cupid|lingerie\\s*gift|chocolates)\\b"
+        },
+        {
+          "id": "mothers_day",
+          "title": "Mother's Day Appreciation",
+          "icon": "Crown",
+          "keywords": ["mother's day", "mothers day", "best mom", "mom gift", "pamper mom", "spoiled mom"],
+          "regex": "\\b(mother'?s\\s*day|mothers\\s*day|spoiling\\s*mom|pamper\\s*mom|best\\s*mom)\\b"
+        },
+        {
+          "id": "fathers_day",
+          "title": "Father's Day Offering",
+          "icon": "Shield",
+          "keywords": ["father's day", "fathers day", "dad's gift", "pleasing dad", "daughter's gift"],
+          "regex": "\\b(father'?s\\s*day|fathers\\s*day|dad'?s\\s*gift|pleasing\\s*dad)\\b"
+        },
+        {
+          "id": "birthday_offerings",
+          "title": "Birthday Offerings & Gift Wrapping",
+          "icon": "Cake",
+          "keywords": ["birthday", "bday", "birthday gift", "wrapped", "bow", "special present", "surprise party"],
+          "regex": "\\b(birthday|b-?day|birthday\\s*gift|wrapped\\s*gift|special\\s*present|ribbon)\\b"
+        }
+      ]
+    },
+    "games_bets": {
+      "id": "domain_games_bets",
+      "title": "Games, Bets & Strategic Leverage",
+      "cipherKey": "bets",
+      "icon": "Dices",
+      "description": "Card bets, calculated gambles, point-scoring exchanges, blackmail compromises, and graduation pledges.",
+      "subdomains": [
+        {
+          "id": "card_bets",
+          "title": "Card Games, Strip Poker & Board Bets",
+          "icon": "Gamepad2",
+          "keywords": ["cards", "strip poker", "poker", "board game", "truth or dare", "lost a bet", "wager", "dice"],
+          "regex": "\\b(cards|strip\\s*poker|poker|board\\s*game|truth\\s*or\\s*dare|lost\\s*a\\s*bet|wager|gamble)\\b"
+        },
+        {
+          "id": "chores_points",
+          "title": "Chore Scoring, Points System & Leverage Exchange",
+          "icon": "CheckSquare",
+          "keywords": ["chores", "point system", "doing chores", "points mom", "allowance", "homework help", "earning points", "collect points", "free use chores", "chore exchange", "i caused this", "caused accident", "clean room", "reward points", "fee exchange", "points to mom", "pussy points"],
+          "regex": "\\b(chore|chores|point\\s*system|reward\\s*points|earn\\s*points|collect\\s*points|points?\\s*(for|to|with)?\\s*(mom|stepmom|sis|stepsis)?|allowance|cleans?\\s*the\\s*room|i\\s*caused\\s*this|caused\\s*an?\\s*accident|free\\s*use\\s*(chore|mom)|fee\\s*exchange|chore\\s*exchange|debt\\s*chore|pussy\\s*points)\\b"
+        },
+        {
+          "id": "study_grades",
+          "title": "Study Sessions, Math Tutors & Passing Grades",
+          "icon": "GraduationCap",
+          "keywords": ["study", "studying", "tutor", "tutoring", "failing", "grades", "exam", "report card", "math"],
+          "regex": "\\b(study|studying|tutor|tutoring|failing|grade|grades|exam|report\\s*card|test)\\b"
+        },
+        {
+          "id": "graduation_promise",
+          "title": "Graduation Promises & Pledges",
+          "icon": "Award",
+          "keywords": ["graduation", "graduate", "promise", "pledge", "if i pass", "deal", "agreement"],
+          "regex": "\\b(graduation|graduating|graduate|promise|pledge|made\\s*a\\s*deal|honor\\s*the\\s*promise)\\b"
+        },
+        {
+          "id": "blackmail_leverage",
+          "title": "Blackmail, Coercion & Strategic Secrets",
+          "icon": "KeyRound",
+          "keywords": ["blackmail", "blackmailed", "secret", "caught on camera", "leaked", "or else", "collateral", "coerced"],
+          "regex": "\\b(blackmail|blackmailed|secret|caught\\s*on\\s*camera|leaked|or\\s*else|extortion|busted)\\b"
+        }
+      ]
+    },
+    "family_archetypes": {
+      "id": "domain_family_archetypes",
+      "title": "Family Archetypes & Homecoming Reunions",
+      "cipherKey": "family",
+      "icon": "Users",
+      "description": "Intimate kinship dynamics featuring naive archetypes and long-awaited homecoming reunions.",
+      "subdomains": [
+        {
+          "id": "naive_mom",
+          "title": "The Naive Mother / MILF",
+          "icon": "Smile",
+          "keywords": ["naive mom", "innocent mom", "confused mom", "sweet mom", "teaches son", "curious mom"],
+          "regex": "\\b(mom|stepmom|milf|mother|perv-?mom|innocent\\s*mom|naive\\s*mom)\\b"
+        },
+        {
+          "id": "naive_wife",
+          "title": "The Naive Wife / Friend's Wife",
+          "icon": "Ring",
+          "keywords": ["naive wife", "sweet wife", "neighbor wife", "friend's wife", "innocent wife"],
+          "regex": "\\b(wife|stepwife|neighbor'?s\\s*wife|friend'?s\\s*wife|hotwife|innocent\\s*wife)\\b"
+        },
+        {
+          "id": "naive_sister",
+          "title": "The Naive Sister / Stepsister",
+          "icon": "Sparkle",
+          "keywords": ["naive sis", "naive sister", "curious sis", "innocent stepsis", "playful sister"],
+          "regex": "\\b(stepsis|sister|sis|step-?sister|curious\\s*sister|little\\s*sister|innocent\\s*stepsis)\\b"
+        },
+        {
+          "id": "naive_daughter",
+          "title": "The Naive Stepdaughter",
+          "icon": "HeartHandshake",
+          "keywords": ["naive daughter", "stepdaughter", "curious daughter", "asking advice", "guidance"],
+          "regex": "\\b(naive\\s*daughter|stepdaughter|step-?daughter|innocent\\s*daughter|needs\\s*guidance)\\b"
+        },
+        {
+          "id": "homecoming",
+          "title": "Homecoming & Holiday Reunions",
+          "icon": "Home",
+          "keywords": ["homecoming", "back from college", "visiting home", "reunion", "dorm break", "welcome back"],
+          "regex": "\\b(homecoming|back\\s*from\\s*college|visiting\\s*home|reunion|dorm\\s*break|welcome\\s*home)\\b"
+        },
+        {
+          "id": "family_swaps",
+          "title": "Family & Spousal Swaps (Mom, Sister, Wife)",
+          "icon": "Repeat",
+          "keywords": ["swap", "mom swap", "sister swap", "wife swap", "family swap", "swapping", "swapped", "daughter swap", "trade wives"],
+          "regex": "\\b(swap|momswap|mom\\s*swap|sister\\s*swap|sis\\s*swap|family\\s*swap|daughter\\s*swap|wife\\s*swap|swapped|swapping|trade\\s*wives|trading\\s*wives)\\b"
+        },
+        {
+          "id": "cuckold_voyeur",
+          "title": "Cuckold, Hotwife & Voyeuristic Humiliation",
+          "icon": "Eye",
+          "keywords": ["cuck", "cuckold", "hotwife", "watching", "voyeur", "cuckquean", "humiliation", "bull", "clean up", "cheating wife"],
+          "regex": "\\b(cuck|cuckold|cuckolding|cuckquean|hotwife|watching|voyeur|humiliation|bull|clean\\s*up|cheating\\s*wife)\\b"
+        }
+      ]
+    },
+    "permission_escalation": {
+      "id": "domain_permission_escalation",
+      "title": "Permission, Conviction & Physical Escalation",
+      "cipherKey": "escalation",
+      "icon": "Flame",
+      "description": "Parental consent, maternal instruction, persuasion by conviction, and gradual somatic escalation.",
+      "subdomains": [
+        {
+          "id": "dad_permission",
+          "title": "Asking Father's Permission, Hall Passes & Duo Consent",
+          "icon": "ShieldCheck",
+          "keywords": ["permission of dad", "dad's permission", "father approves", "hall pass", "blessing", "dad allows", "father permission", "father and son share", "dad joins", "dad lets him", "family blessing"],
+          "regex": "\\b(permission|ask\\s*permission|dad'?s\\s*permission|hall\\s*pass|dad\\s*allows|father\\s*approves|dad\\s*lets|father\\s*and\\s*son|dad\\s*joins?|sharing\\s*with\\s*dad)\\b"
+        },
+        {
+          "id": "mom_orders_sis",
+          "title": "Mother Orders / Guides Sister",
+          "icon": "GitFork",
+          "keywords": ["mum orders sis", "mom tells sister", "mom guides sis", "family instruction", "mother teaches"],
+          "regex": "\\b(msd|mom\\s*orders|mom\\s*and\\s*stepsis|stepmom\\s*and\\s*stepsis|mom\\s*and\\s*daughter|mother\\s*and\\s*daughter|mom\\s*daughter|sharing\\s*mom)\\b"
+        },
+        {
+          "id": "conviction_threesome",
+          "title": "Threesome by Reluctant Conviction",
+          "icon": "Users2",
+          "keywords": ["threesome by conviction", "convinced her", "gradually persuaded", "reluctant agreement", "joining in"],
+          "regex": "\\b(threesome|ffm|mmf|conviction|persuaded|join\\s*in|sharing\\s*her|reluctant\\s*threesome)\\b"
+        },
+        {
+          "id": "gradual_escalation",
+          "title": "Persuasion, Teasing & Somatic Escalation (\"Just Once / Just Touch\")",
+          "icon": "TrendingUp",
+          "keywords": ["kissing", "touching", "poking", "pulling skirt", "pulling pant", "grinding", "escalation", "slow burn", "teasing", "just once", "just touch", "touch it", "feel it", "just the tip", "begging", "nagging", "tricked", "pretend date", "date stepsis", "date mom"],
+          "regex": "\\b(kissing|touching|poking|pulling\\s*pant|pulling\\s*skirt|grinding|massage|oil|slow\\s*burn|teasing|just\\s*once|just\\s*touch|touch\\s*it|feel\\s*it|just\\s*the\\s*tip|begging|nagging|tricked|persuaded?|pretend\\s*date|practice\\s*date)\\b"
+        }
+      ]
+    },
+    "institutional_niche": {
+      "id": "domain_institutional_niche",
+      "title": "Institutional, Convent & Situational Entrapment",
+      "cipherKey": "church",
+      "icon": "Church",
+      "description": "Church/nun roleplay, blindfolded sensory stimulation, stuck entrapments, and yoga intimacy.",
+      "subdomains": [
+        {
+          "id": "church_nun",
+          "title": "The Cloister: Church, Convent & Nun Roleplay",
+          "icon": "Cross",
+          "keywords": ["church", "nun", "convent", "confession", "confessional", "priest", "holy", "habit", "sinner"],
+          "regex": "\\b(church|nun|convent|confession|confessional|priest|holy|habit|sinner|blessing)\\b"
+        },
+        {
+          "id": "yoga_stuck",
+          "title": "Yoga Practice & Physical Entrapment",
+          "icon": "Activity",
+          "keywords": ["yoga", "stuck", "under the bed", "washing machine", "flexible", "trapped", "help me out"],
+          "regex": "\\b(yoga|stuck|trapped|under\\s*the\\s*bed|washing\\s*machine|flexible\\s*stretch)\\b"
+        },
+        {
+          "id": "mistaken_blindfolded",
+          "title": "Mistaken Identity & Blindfolded Sensory Play",
+          "icon": "EyeOff",
+          "keywords": ["blindfolded", "blindfold", "mistaken", "wrong room", "in the dark", "sensory", "whisper"],
+          "regex": "\\b(blindfolded?|mistaken\\s*identity|wrong\\s*room|in\\s*the\\s*dark|sensory\\s*game)\\b"
+        }
+      ]
+    },
+    "hardcore_dynamics": {
+      "id": "domain_hardcore_dynamics",
+      "title": "Hardcore Dynamics & Intense Physicality",
+      "cipherKey": "hardcore",
+      "icon": "Zap",
+      "description": "Double penetration, gangbangs, anal choreography, facials, and cumshot climaxes.",
+      "subdomains": [
+        {
+          "id": "double_penetration",
+          "title": "Double Penetration (DP) & Two-on-One",
+          "icon": "Maximize2",
+          "keywords": ["dp", "double penetration", "two dicks", "shared", "sandwiched", "double teamed"],
+          "regex": "\\b(dp|double\\s*penetration|two\\s*guys|two\\s*dicks|sandwiched)\\b"
+        },
+        {
+          "id": "gangbang_trains",
+          "title": "Gangbangs, Trains & Bukkake Surrounds",
+          "icon": "Layers",
+          "keywords": ["gangbang", "train", "bukkake", "surrounded", "multiple guys", "shared by all", "double team"],
+          "regex": "\\b(gangbang|gang-bang|train|bukkake|surrounded|shared\\s*by\\s*all|multiple\\s*guys|double\\s*team)\\b"
+        },
+        {
+          "id": "wild_orgies",
+          "title": "Wild Orgies & Group Parties",
+          "icon": "Sparkles",
+          "keywords": ["orgy", "orgies", "group sex", "party", "multiple girls", "room full", "foursome", "fivesome", "wild orgy"],
+          "regex": "\\b(orgy|orgies|group\\s*sex|party|multiple\\s*girls|room\\s*full|foursome|fivesome)\\b"
+        },
+        {
+          "id": "anal_choreography",
+          "title": "Anal Artistry & Deep Passion",
+          "icon": "Sparkles",
+          "keywords": ["anal", "butt", "asshole", "oil", "tight", "backdoor"],
+          "regex": "\\b(anal|backdoor|ass\\s*fuck|oil\\s*massage)\\b"
+        },
+        {
+          "id": "facial_cumshot",
+          "title": "Facial Finishes & Cumshot Climaxes",
+          "icon": "Droplet",
+          "keywords": ["facial", "cumshot", "creampie", "swallow", "finish", "covered"],
+          "regex": "\\b(facial|cumshot|creampie|finish\\s*on\\s*face|covered)\\b"
+        }
+      ]
+    },
+    "abyssal_nasty": {
+      "id": "domain_abyssal_nasty",
+      "title": "The Abyssal Vault: Deep & Uncensored Depravity",
+      "cipherKey": "abyss",
+      "icon": "Skull",
+      "description": "Level 4: The deepest forbidden underworld. Extreme domination, BDSM dungeons, intense limits, taboo realities, and raw unfiltered passion.",
+      "subdomains": [
+        {
+          "id": "taboo_extremes",
+          "title": "Taboo Extremes & Forbidden Realities",
+          "icon": "AlertTriangle",
+          "keywords": ["taboo", "forbidden", "extreme", "nasty", "raw", "filthy", "depraved"],
+          "regex": "\\b(taboo|forbidden|extreme|nasty|raw|filthy|depraved)\\b"
+        },
+        {
+          "id": "rough_domination",
+          "title": "Rough Domination, Choking & Restraints",
+          "icon": "Zap",
+          "keywords": ["rough", "domination", "choke", "choking", "hard", "slapped", "spanked", "hair pull"],
+          "regex": "\\b(rough|domination|choke|choking|hard|slapped|spanked|hair\\s*pull)\\b"
+        },
+        {
+          "id": "bdsm_dungeon",
+          "title": "BDSM Dungeon, Bondage & Leather",
+          "icon": "Lock",
+          "keywords": ["bdsm", "bondage", "dungeon", "ropes", "leather", "tied up", "submissive", "collar"],
+          "regex": "\\b(bdsm|bondage|dungeon|ropes|leather|tied\\s*up|submissive|collar)\\b"
+        },
+        {
+          "id": "extreme_gangbangs",
+          "title": "Maximum Overload Gangbangs & Train Limits",
+          "icon": "Layers",
+          "keywords": ["bukkake", "gangbang", "train", "monster", "overload", "surrounded", "shared by all"],
+          "regex": "\\b(bukkake|gangbang|train|monster|overload|surrounded|shared\\s*by\\s*all)\\b"
+        },
+        {
+          "id": "degradation_limits",
+          "title": "Degradation Limits, Gagging & Deepthroat",
+          "icon": "Droplets",
+          "keywords": ["degradation", "gag", "gagging", "deepthroat", "spit", "humiliation", "messy", "drool"],
+          "regex": "\\b(degradation|gag|gagging|deepthroat|spit|humiliation|messy|drool)\\b"
+        }
+      ]
+    },
+    "tier1_soft_gnd": {
+      "id": "domain_tier1",
+      "title": "Tier 1: Soft / Girl-Next-Door Sanctum",
+      "cipherKey": "tier1",
+      "icon": "Flower2",
+      "description": "The premier tier of sweet, delicate, girl-next-door beauties celebrated for emotive connection and natural grace.",
+      "performers": [
+        { "name": "Vanna Bardot", "id": "vanna-bardot", "vibe": "Ethereal Girl-Next-Door / Pure Emotion" },
+        { "name": "Alina Lopez", "id": "alina-lopez", "vibe": "Playful Latin Beauty / Radiant Warmth" },
+        { "name": "Hazel Moore", "id": "hazel-moore", "vibe": "Delicate Innocence / Soft Whimsical" },
+        { "name": "Melody Marks", "id": "melody-marks", "vibe": "Petite Golden Angel / Softcore Master" },
+        { "name": "Maya Woulfe", "id": "maya-woulfe", "vibe": "Indie Alternative Sweetheart / Raw Energy" },
+        { "name": "Kylie Quinn", "id": "kylie-quinn", "vibe": "Sun-Kissed Golden Girl / Infectious Smile" },
+        { "name": "Haley Reed", "id": "haley-reed", "vibe": "Slender Elegance / Expressive Warmth" },
+        { "name": "Kendra Spade", "id": "kendra-spade", "vibe": "Exotic Grace / Hypnotic Gaze" },
+        { "name": "Leana Lovings", "id": "leana-lovings", "vibe": "Petite Dynamo / Playful Mischief" },
+        { "name": "Kenna James", "id": "kenna-james", "vibe": "Blonde Next Door / Classic Sweetness" },
+        { "name": "Lena Paul", "id": "lena-paul", "vibe": "Voluptuous Hearth / Warm Maternal Grace" },
+        { "name": "Indica Flower", "id": "indica-flower", "vibe": "Artistic Bohemian / Sensual Depth" },
+        { "name": "Liz Jordan", "id": "liz-jordan", "vibe": "Soft Features / Authentic Passion" },
+        { "name": "Molly Little", "id": "molly-little", "vibe": "Petite Brunette / Wholesome Allure" },
+        { "name": "Kenzie Taylor", "id": "kenzie-taylor", "vibe": "Sunny Optimism / Slender Perfection" },
+        { "name": "Pristine Edge", "id": "pristine-edge", "vibe": "Poised Elegance / Subtle Intensity" },
+        { "name": "Electra Rayne", "id": "electra-rayne", "vibe": "Charming Playfulness / Bright Eyes" },
+        { "name": "Jayden Cole", "id": "jayden-cole", "vibe": "Timeless Neighbor / Soft Spoken Allure" },
+        { "name": "Jewelz Blu", "id": "jewelz-blu", "vibe": "Luminescent Beauty / Gentle Intimacy" }
+      ]
+    },
+    "tier2_glamour_reddit": {
+      "id": "domain_tier2",
+      "title": "Tier 2: Cult Glamour & Reddit Community Crushes",
+      "cipherKey": "tier2",
+      "icon": "HeartHandshake",
+      "description": "Glamour queens, intense screen presences, and the 80+ crowd-voted Reddit romantic crushes from r/Porn_Discuss.",
+      "corePerformers": [
+        { "name": "Gianna Dior", "id": "gianna-dior", "category": "Glamour / Sensual" },
+        { "name": "Staci Carr", "id": "staci-carr", "category": "Cult Favorite / Elegance" },
+        { "name": "Ivana Sugar", "id": "ivana-sugar", "category": "European Mystique" },
+        { "name": "Lilu Moon", "id": "lilu-moon", "category": "Petite Enigma" },
+        { "name": "Clea Gaultier", "id": "clea-gaultier", "category": "French Cinema Allure" },
+        { "name": "Alexa Tomas", "id": "alexa-tomas", "category": "Sophisticated Passion" },
+        { "name": "Megan Salinas", "id": "megan-salinas", "category": "Vibrant Energy" },
+        { "name": "Alexis Breeze", "id": "alexis-breeze", "category": "Soft Glamour" },
+        { "name": "Willow Ryder", "id": "willow-ryder", "category": "Bold Expression" },
+        { "name": "Nicole Kitt", "id": "nicole-kitt", "category": "European Chic" },
+        { "name": "Kira Noir", "id": "kira-noir", "category": "Magnetic Power / Radiance" },
+        { "name": "Chanell Heart", "id": "chanell-heart", "category": "Expressive Charisma" }
+      ],
+      "redditCrushPerformers": [
+        { "name": "Angela White", "id": "angela-white", "group": "Top Voted & Multi-Mentioned", "note": "All-time Hall of Fame; multi-commenter legend" },
+        { "name": "Remy LaCroix", "id": "remy-lacroix", "group": "Top Voted & Multi-Mentioned", "note": "Long-term teenage crush; iconic natural rhythm" },
+        { "name": "Blake Blossom", "id": "blake-blossom", "group": "Top Voted & Multi-Mentioned", "note": "Wholesome down-to-earth vibe and radiant presence" },
+        { "name": "Eva Nyx", "id": "eva-nyx", "group": "Top Voted & Multi-Mentioned", "note": "Petite girl-next-door; strong intimate sexual energy" },
+        { "name": "Emily Willis", "id": "emily-willis", "group": "Top Voted & Multi-Mentioned", "note": "Surreal beauty; transcendent screen presence" },
+        { "name": "Leah Gotti", "id": "leah-gotti", "group": "Top Voted & Multi-Mentioned", "note": "Iconic aesthetic and legendary performances" },
+        { "name": "Agatha Vega", "id": "agatha-vega", "group": "Top Voted & Multi-Mentioned", "note": "Praised as one of the prettiest modern stars" },
+        { "name": "Chloe Temple", "id": "chloe-temple", "group": "Top Voted & Multi-Mentioned", "note": "Playful, charming hang-out personality" },
+        { "name": "Lola Fae", "id": "lola-fae", "group": "Top Voted & Multi-Mentioned", "note": "Freak + chill combo; ATK Girlfriends favorite" },
+        { "name": "Lacy Lennon", "id": "lacy-lennon", "group": "Top Voted & Multi-Mentioned", "note": "Genuine wifey material; radiant smile" },
+        { "name": "Valentina Nappi", "id": "valentina-nappi", "group": "Top Voted & Multi-Mentioned", "note": "Intellectual elegance and uninhibited passion" },
+        { "name": "Lulu Chu", "id": "lulu-chu", "group": "Top Voted & Multi-Mentioned", "note": "Bubbly infectious energy and petite charm" },
+        { "name": "Sophie Dee", "id": "sophie-dee", "group": "Top Voted & Multi-Mentioned", "note": "Captivating eye contact and timeless charisma" },
+        { "name": "Kendra Sunderland", "id": "kendra-sunderland", "group": "Top Voted & Multi-Mentioned", "note": "Sublime wifey material;Library legend" },
+        { "name": "Aaliyah Love", "id": "aaliyah-love", "group": "Playful & Contemporary", "note": "Exotic warmth and sensual depth" },
+        { "name": "Addison Vodka", "id": "addison-vodka", "group": "Playful & Contemporary", "note": "Noted for humor and candid authenticity" },
+        { "name": "Angel Youngs", "id": "angel-youngs", "group": "Playful & Contemporary", "note": "Chill, approachable girl-next-door demeanor" },
+        { "name": "Anna de Ville", "id": "anna-de-ville", "group": "Playful & Contemporary", "note": "Alternative edge and magnetic confidence" },
+        { "name": "Anya Olsen", "id": "anya-olsen", "group": "Playful & Contemporary", "note": "Petite blonde sweetheart" },
+        { "name": "Aria Lee", "id": "aria-lee", "group": "Playful & Contemporary", "note": "Expressive warmth and sweet laugh" },
+        { "name": "Asteria Jade", "id": "asteria-jade", "group": "Playful & Contemporary", "note": "Sensual petite grace" },
+        { "name": "Avalon Mira", "id": "avalon-mira", "group": "Playful & Contemporary", "note": "Cuddle & hang-out vibes" },
+        { "name": "Bunny Fae", "id": "bunny-fae", "group": "Playful & Contemporary", "note": "Round-glasses girl-next-door aesthetic" },
+        { "name": "Cameron Canela", "id": "cameron-canela", "group": "Playful & Contemporary", "note": "Vibrant Latin flair" },
+        { "name": "Carolina Sweets", "id": "carolina-sweets", "group": "Playful & Contemporary", "note": "Southern sweet charm" },
+        { "name": "Chloe Amour", "id": "chloe-amour", "group": "Playful & Contemporary", "note": "Classic elegance and poise" },
+        { "name": "Chloe Nicole", "id": "chloe-nicole", "group": "Playful & Contemporary", "note": "Softcore-to-hardcore crossover darling" },
+        { "name": "Clara Trinity", "id": "clara-trinity", "group": "Playful & Contemporary", "note": "Delicate brunette beauty" },
+        { "name": "Daisy Haze", "id": "daisy-haze", "group": "Playful & Contemporary", "note": "Playful energy and natural allure" },
+        { "name": "Daisy Taylor", "id": "daisy-taylor", "group": "Playful & Contemporary", "note": "Transcendent trans icon; stunning glamour" },
+        { "name": "Ella Hughes", "id": "ella-hughes", "group": "Playful & Contemporary", "note": "British charm and captivating elegance" },
+        { "name": "Ella Reese", "id": "ella-reese", "group": "Playful & Contemporary", "note": "Youthful vibrance and sweet laughter" },
+        { "name": "Elly Clutch", "id": "elly-clutch", "group": "Playful & Contemporary", "note": "Petite dynamic powerhouse" },
+        { "name": "Emma Magnolia", "id": "emma-magnolia", "group": "Playful & Contemporary", "note": "Sensual retro allure and natural curves" },
+        { "name": "Haley Spades", "id": "haley-spades", "group": "Playful & Contemporary", "note": "Modern blonde sweetheart" },
+        { "name": "Karlee Grey", "id": "karlee-grey", "group": "Playful & Contemporary", "note": "Uninhibited passion and athletic charm" },
+        { "name": "Kenzie Reeves", "id": "kenzie-reeves", "group": "Playful & Contemporary", "note": "Petite blonde dynamo" },
+        { "name": "Lexi Belle", "id": "lexi-belle", "group": "Playful & Contemporary", "note": "All-time golden girl-next-door icon" },
+        { "name": "Lexi Lore", "id": "lexi-lore", "group": "Playful & Contemporary", "note": "Sweet girl-next-door humor and charm" },
+        { "name": "Lilibet Saunders", "id": "lilibet-saunders", "group": "Playful & Contemporary", "note": "Goofy, charming humor and radiant personality" },
+        { "name": "Liya Silver", "id": "liya-silver", "group": "Playful & Contemporary", "note": "Sculpted perfection and cinematic beauty" },
+        { "name": "Madison Scott", "id": "madison-scott", "group": "Playful & Contemporary", "note": "Bubbly cheerleader energy" },
+        { "name": "Moona Snake", "id": "moona-snake", "group": "Playful & Contemporary", "note": "Girl-next-door look and piercing intellect" },
+        { "name": "Octavia Red", "id": "octavia-red", "group": "Playful & Contemporary", "note": "Fiery passion and distinctive style" },
+        { "name": "Summer Hart", "id": "summer-hart", "group": "Playful & Contemporary", "note": "Warm sun-drenched allure" },
+        { "name": "Sydney Summers", "id": "sydney-summers", "group": "Playful & Contemporary", "note": "Approachable golden beauty" },
+        { "name": "True Kait", "id": "true-kait", "group": "Playful & Contemporary", "note": "Artistic authenticity and deep connection" },
+        { "name": "Victoria June", "id": "victoria-june", "group": "Playful & Contemporary", "note": "Southern charm and radiant smile" },
+        { "name": "Violet Starr", "id": "violet-starr", "group": "Playful & Contemporary", "note": "Enchanting brunette beauty" },
+        { "name": "Xxlayna Marie", "id": "xxlayna-marie", "group": "Playful & Contemporary", "note": "High-octane charisma and striking presence" },
+        { "name": "Abella Danger", "id": "abella-danger", "group": "Glamour, Matriarch & Iconic", "note": "Unstoppable force of nature; Hall of Fame icon" },
+        { "name": "Alexis Fawx", "id": "alexis-fawx", "group": "Glamour, Matriarch & Iconic", "note": "Regal MILF icon; unmatched charisma" },
+        { "name": "Alexis Tae", "id": "alexis-tae", "group": "Glamour, Matriarch & Iconic", "note": "Contemporary glamour powerhouse" },
+        { "name": "Amarna Miller", "id": "amarna-miller", "group": "Glamour, Matriarch & Iconic", "note": "Intellectual bohemian beauty" },
+        { "name": "Ana Foxxx", "id": "ana-foxxx", "group": "Glamour, Matriarch & Iconic", "note": "Striking elegance and commanding aura" },
+        { "name": "Anna Bell Peaks", "id": "anna-bell-peaks", "group": "Glamour, Matriarch & Iconic", "note": "Inked queen and fearless performer" },
+        { "name": "Apolonia Lapiedra", "id": "apolonia-lapiedra", "group": "Glamour, Matriarch & Iconic", "note": "Spanish passion and high glamour" },
+        { "name": "Asa Akira", "id": "asa-akira", "group": "Glamour, Matriarch & Iconic", "note": "Cultural icon, author, and legend" },
+        { "name": "Ashley Fires", "id": "ashley-fires", "group": "Glamour, Matriarch & Iconic", "note": "Inked goddess with deep screen magnetism" },
+        { "name": "Audrey Noir", "id": "audrey-noir", "group": "Glamour, Matriarch & Iconic", "note": "Sultry elegance and piercing eyes" },
+        { "name": "Ava Addams", "id": "ava-addams", "group": "Glamour, Matriarch & Iconic", "note": "World-renowned matriarch of adult cinema" },
+        { "name": "Bella Rossi", "id": "bella-rossi", "group": "Glamour, Matriarch & Iconic", "note": "Sultry brunette with intoxicating gaze" },
+        { "name": "Brandi Love", "id": "brandi-love", "group": "Glamour, Matriarch & Iconic", "note": "The definitive premier MILF icon" },
+        { "name": "Chanel Preston", "id": "chanel-preston", "group": "Glamour, Matriarch & Iconic", "note": "Classically gorgeous and articulate" },
+        { "name": "Christie Stevens", "id": "christie-stevens", "group": "Glamour, Matriarch & Iconic", "note": "Timeless blonde elegance" },
+        { "name": "Clemence Audiard", "id": "clemence-audiard", "group": "Glamour, Matriarch & Iconic", "note": "French arthouse sophistication" },
+        { "name": "Codi Vore", "id": "codi-vore", "group": "Glamour, Matriarch & Iconic", "note": "Petite blonde with fearless passion" },
+        { "name": "Gianna Michaels", "id": "gianna-michaels", "group": "Glamour, Matriarch & Iconic", "note": "Legendary hall of fame voluptuous queen" },
+        { "name": "Honey Gold", "id": "honey-gold", "group": "Glamour, Matriarch & Iconic", "note": "Golden radiance and pure joy" },
+        { "name": "Jada Fire", "id": "jada-fire", "group": "Glamour, Matriarch & Iconic", "note": "Trailblazing Hall of Fame legend" },
+        { "name": "Jade Harper", "id": "jade-harper", "group": "Glamour, Matriarch & Iconic", "note": "Mesmerizing eyes and natural sensuality" },
+        { "name": "Jenna Sativa", "id": "jenna-sativa", "group": "Glamour, Matriarch & Iconic", "note": "Lesbian cinema superstar and passionate aura" },
+        { "name": "Jessy Dubai", "id": "jessy-dubai", "group": "Glamour, Matriarch & Iconic", "note": "Glamorous and captivating trans superstar" },
+        { "name": "Korra Del Rio", "id": "korra-del-rio", "group": "Glamour, Matriarch & Iconic", "note": "Stunning elegance and graceful rhythm" },
+        { "name": "Larkin Love", "id": "larkin-love", "group": "Glamour, Matriarch & Iconic", "note": "Intelligent creator and red-headed maven" },
+        { "name": "Lauren Phillips", "id": "lauren-phillips", "group": "Glamour, Matriarch & Iconic", "note": "Towering red-haired goddess" },
+        { "name": "Lena Nicole", "id": "lena-nicole", "group": "Glamour, Matriarch & Iconic", "note": "Classic beauty and warm presence" },
+        { "name": "Lily Love", "id": "lily-love", "group": "Glamour, Matriarch & Iconic", "note": "Petite, radiant and sweet" },
+        { "name": "LoveTinkerbell", "id": "lovetinkerbell", "group": "Glamour, Matriarch & Iconic", "note": "Beloved cam goddess and community muse" },
+        { "name": "Marina Visconti", "id": "marina-visconti", "group": "Glamour, Matriarch & Iconic", "note": "Aristocratic European glamour" },
+        { "name": "Mars Noire", "id": "mars-noire", "group": "Glamour, Matriarch & Iconic", "note": "Sultry dark elegance" },
+        { "name": "Mayli", "id": "mayli", "group": "Glamour, Matriarch & Iconic", "note": "Legendary one-and-done cinematic mystery" },
+        { "name": "Milena Ray", "id": "milena-ray", "group": "Glamour, Matriarch & Iconic", "note": "Petite European beauty" },
+        { "name": "Penny Pax", "id": "penny-pax", "group": "Glamour, Matriarch & Iconic", "note": "Thoughtful, articulate, and iconic" },
+        { "name": "Phoenix Marie", "id": "phoenix-marie", "group": "Glamour, Matriarch & Iconic", "note": "Commanding screen presence and Hall of Fame status" },
+        { "name": "Pinky", "id": "pinky", "group": "Glamour, Matriarch & Iconic", "note": "Curvaceous legend and comedic personality" },
+        { "name": "Reagan Foxx", "id": "reagan-foxx", "group": "Glamour, Matriarch & Iconic", "note": "The epitome of high-society MILF glamour" },
+        { "name": "Riley Reid", "id": "riley-reid", "group": "Glamour, Matriarch & Iconic", "note": "The most recognized modern starlet on earth" },
+        { "name": "Roxie Sinner", "id": "roxie-sinner", "group": "Glamour, Matriarch & Iconic", "note": "Alternative edge and hypnotic rhythm" },
+        { "name": "Sara Jay", "id": "sara-jay", "group": "Glamour, Matriarch & Iconic", "note": "Enduring MILF legend with massive fan loyalty" },
+        { "name": "Scarlette Moon", "id": "scarlette-moon", "group": "Glamour, Matriarch & Iconic", "note": "Delicate sensuality and warmth" },
+        { "name": "Silvia Soprano", "id": "silvia-soprano", "group": "Glamour, Matriarch & Iconic", "note": "Classic European poise" },
+        { "name": "Sunny Leone", "id": "sunny-leone", "group": "Glamour, Matriarch & Iconic", "note": "Global crossover superstar and Bollywood queen" },
+        { "name": "Syren De Mer", "id": "syren-de-mer", "group": "Glamour, Matriarch & Iconic", "note": "Glamorous red-headed matriarch" },
+        { "name": "Teagan Presley", "id": "teagan-presley", "group": "Glamour, Matriarch & Iconic", "note": "Golden era icon with timeless screen presence" },
+        { "name": "Tori Black", "id": "tori-black", "group": "Glamour, Matriarch & Iconic", "note": "Two-time AVN Performer of the Year; immortal legend" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="grad-263702220" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+    <radialGradient id="glow-263702220" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.25)" />
+      <stop offset="100%" stop-color="rgba(0,0,0,0.4)" />
+    </radialGradient>
+  </defs>
+  <!-- Background circle with gradient -->
+  <circle cx="100" cy="100" r="100" fill="url(#grad-263702220)" />
+  <circle cx="100" cy="100" r="100" fill="url(#glow-263702220)" />
+  
+  <!-- Subtle inner ring accent -->
+  <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" />
+  
+  <!-- Monogram Initials -->
+  <text x="100" y="112" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        font-size="68" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="middle"
+        letter-spacing="1" style="text-shadow: 0 4px 12px rgba(0,0,0,0.45);">JK</text>
+  
+  <!-- Sub-label with hair/vibe cue -->
+  <text x="100" y="156" font-family="'Inter', sans-serif" font-size="12" font-weight="600"
+        fill="rgba(255,255,255,0.75)" text-anchor="middle" letter-spacing="2" text-transform="uppercase">blonde</text>
+</svg>

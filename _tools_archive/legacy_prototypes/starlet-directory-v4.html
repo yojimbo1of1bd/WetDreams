@@ -1,0 +1,419 @@
+<!-- language: HTML/JS/CSS, file: starlet-directory-v4.html, target: modern browsers -->
+<!-- Serve the folder: python -m http.server 8000, then open http://localhost:8000/starlet-directory-v4.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b080a">
+<title>Starlet Directory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b080a;--surface:#151215;--surface-raised:#1e1a1e;--ink:#f2ece6;--muted:#9e948e;
+  --accent:#d4a853;--accent-weak:rgba(212,168,83,0.12);--accent-medium:rgba(212,168,83,0.25);
+  --line:rgba(242,236,230,0.07);--seen:#5ee29c;--seen-weak:rgba(94,226,156,0.12);
+  --pos:#5ee29c;--neg:#f87171;--radius:14px;--radius-sm:8px;
+  --shadow:0 1px 2px rgba(0,0,0,0.3),0 10px 28px -8px rgba(0,0,0,0.6);
+  --space:clamp(0.9rem,0.75rem + 0.8vw,1.4rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:0.92rem;line-height:1.55;min-height:100vh}
+header{position:sticky;top:0;z-index:100;background:rgba(11,8,10,0.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:.8rem 0}
+.header-inner{max-width:1600px;margin:0 auto;padding:0 var(--space);display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap}
+header h1{font-family:"Playfair Display",serif;font-size:1.6rem;font-weight:700;color:var(--accent)}
+header p{color:var(--muted);font-size:.82rem}
+.stats{display:flex;gap:1rem;font-size:.78rem}
+.stat{text-align:center}.stat b{display:block;color:var(--accent);font-size:1rem}.stat span{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.65rem}
+.tabs{background:var(--surface);border-bottom:1px solid var(--line);padding:0 var(--space);display:flex;gap:.4rem;max-width:1600px;margin:0 auto;overflow-x:auto}
+.tab{background:transparent;border:none;color:var(--muted);padding:.8rem 1rem;font-family:inherit;font-size:.85rem;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.controls{background:var(--surface);border-bottom:1px solid var(--line);padding:.7rem var(--space);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.controls input,.controls select,.controls button{background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:.5rem .9rem;border-radius:100px;font-family:inherit;font-size:.82rem;outline:none}
+.controls input:focus,.controls select:focus{border-color:var(--accent)}
+.controls input.grow{flex:1;min-width:200px}
+.controls button{cursor:pointer}
+.controls button:hover{border-color:var(--accent);color:var(--accent)}
+.view{display:none}.view.active{display:block}
+.layout{max-width:1600px;margin:0 auto;padding:var(--space);display:grid;grid-template-columns:250px 1fr;gap:var(--space)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.sidebar{position:sticky;top:180px;align-self:start;max-height:calc(100vh - 200px);overflow-y:auto}
+.facet{margin-bottom:1.1rem}
+.facet h3{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem;font-weight:600}
+.facet label{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted);cursor:pointer;padding:.15rem 0}
+.facet label:hover{color:var(--ink)}
+.facet input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px}
+.facet .count{margin-left:auto;font-size:.72rem;opacity:.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;align-content:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem;display:flex;flex-direction:column;gap:.4rem;position:relative;transition:all .2s}
+.card:hover{border-color:var(--accent-medium);transform:translateY(-2px);box-shadow:var(--shadow)}
+.card.seen{opacity:.5}
+.card.seen::before{content:"✓";position:absolute;top:8px;right:8px;background:var(--seen-weak);color:var(--seen);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.card-name{font-family:"Playfair Display",serif;font-size:1.1rem;font-weight:700;line-height:1.2;padding-right:30px}
+.card-meta{color:var(--muted);font-size:.72rem}
+.sources{display:flex;gap:.3rem;margin:.2rem 0}
+.src{font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;padding:.15rem .4rem;border-radius:100px;border:1px solid var(--line);color:var(--muted)}
+.src.main{color:var(--accent);border-color:var(--accent-medium)}
+.src.excogi{color:#5ee29c;border-color:rgba(94,226,156,0.3)}
+.src.reference{color:#c4b5fd;border-color:rgba(196,181,253,0.3)}
+.badges{display:flex;flex-wrap:wrap;gap:.25rem}
+.badge{font-size:.62rem;font-weight:600;padding:.2rem .5rem;border-radius:100px;background:var(--accent-weak);color:var(--accent);border:1px solid var(--accent-medium)}
+.badge.trophy::before{content:"🏆 ";font-size:.65rem}
+.genre-chips{display:flex;flex-wrap:wrap;gap:.25rem}
+.genre-chip{font-size:.62rem;font-weight:600;padding:.18rem .5rem;border-radius:100px;background:rgba(94,226,156,0.08);color:var(--seen);border:1px solid rgba(94,226,156,0.25);cursor:pointer;font-family:inherit}
+.genre-chip:hover{background:rgba(94,226,156,0.18)}
+.scenes{font-size:.72rem;color:var(--muted);line-height:1.45}
+.scenes ul{list-style:none;margin-top:.2rem}
+.scenes li{padding:.18rem 0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:.4rem;flex-wrap:wrap}
+.scenes li:last-child{border-bottom:none}
+.scenes li b{color:var(--accent);font-weight:500}
+.scenes .find{margin-left:auto;font-size:.66rem;color:var(--seen);text-decoration:none;border:1px solid rgba(94,226,156,0.3);padding:.1rem .4rem;border-radius:100px}
+.scenes .find:hover{background:rgba(94,226,156,0.1)}
+.tags{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.2rem}
+.tag{background:var(--surface-raised);color:var(--muted);font-size:.62rem;padding:.1rem .4rem;border-radius:100px;border:1px solid var(--line)}
+.sentiment{font-size:.7rem;padding:.25rem .5rem;border-radius:var(--radius-sm);background:var(--surface-raised);border:1px solid var(--line);display:flex;align-items:center;gap:.4rem;width:fit-content}
+.sentiment.muted{color:var(--muted);font-style:italic}
+.sent-score{font-weight:700;padding:.1rem .3rem;border-radius:4px;font-size:.7rem}
+.sent-score.pos{color:var(--pos);background:rgba(94,226,156,0.1)}
+.sent-score.neg{color:var(--neg);background:rgba(248,113,113,0.1)}
+.links{display:flex;gap:.4rem;margin-top:auto;padding-top:.4rem}
+.link{flex:1;text-align:center;padding:.35rem;border-radius:var(--radius-sm);text-decoration:none;font-size:.72rem;font-weight:500;background:var(--surface-raised);color:var(--ink);border:1px solid var(--line);transition:all .2s}
+.link:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.no-results{text-align:center;padding:3rem;color:var(--muted);grid-column:1/-1}
+.empty-state{text-align:center;padding:3rem;color:var(--muted)}
+.empty-state h2{color:var(--accent);margin-bottom:.5rem}
+.empty-state code{background:var(--surface-raised);padding:.2rem .5rem;border-radius:4px;font-size:.85rem}
+/* Guide view */
+.guide{max-width:1600px;margin:0 auto;padding:var(--space)}
+.guide h2{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--accent);margin-bottom:.3rem}
+.guide .sub{color:var(--muted);margin-bottom:1.5rem;font-size:.85rem}
+.shelf{margin-bottom:2rem;border-left:3px solid var(--accent-medium);padding-left:1rem}
+.shelf h3{font-family:"Playfair Display",serif;font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:.2rem}
+.shelf .shelf-meta{color:var(--muted);font-size:.72rem;margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.06em}
+.scene-row{display:flex;align-items:baseline;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.85rem}
+.scene-row:last-child{border-bottom:none}
+.scene-row .who{color:var(--accent);font-weight:600;min-width:140px}
+.scene-row .what{flex:1;color:var(--ink)}
+.scene-row .studio{color:var(--muted);font-size:.72rem}
+.scene-row .go{font-size:.72rem;color:var(--seen);text-decoration:none;border:1px solid rgba(94,226,156,0.3);padding:.15rem .5rem;border-radius:100px;white-space:nowrap}
+.scene-row .go:hover{background:rgba(94,226,156,0.1)}
+.scroll-top{position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;background:var(--surface-raised);border:1px solid var(--line);color:var(--ink);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.1rem;z-index:99}
+.scroll-top.show{display:flex}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.scene-row{flex-wrap:wrap}.scene-row .who{min-width:0}}
+</style>
+</head>
+<body>
+<header>
+<div class="header-inner">
+  <div><h1>Starlet Directory</h1><p id="subtitle">loading…</p></div>
+  <div class="stats" aria-live="polite">
+    <div class="stat"><b id="statTotal">0</b><span>Total</span></div>
+    <div class="stat"><b id="statShown">0</b><span>Shown</span></div>
+    <div class="stat"><b id="statSeen">0</b><span>Seen</span></div>
+  </div>
+</div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-view="browse" role="tab">Browse</button>
+  <button class="tab" data-view="guide" role="tab">Family Guide</button>
+</nav>
+
+<section class="view active" id="view-browse">
+  <div class="controls">
+    <input type="text" id="q" class="grow" placeholder="Search name, notes, scene, tags, genre…" autocomplete="off">
+    <select id="sort">
+      <option value="name">Sort: Name</option>
+      <option value="age">Sort: Age</option>
+      <option value="year">Sort: Debut year</option>
+      <option value="scenes">Sort: Scene count</option>
+    </select>
+    <button id="resetFilters">Clear filters</button>
+    <button id="resetSeen">Reset seen</button>
+  </div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Filters"></aside>
+    <main>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty-state" hidden>
+        <h2>No data loaded</h2>
+        <p>Couldn't fetch <code>performers-tagged.json</code>. Run <code>node tag-genres.mjs</code> first, then serve the folder:</p>
+        <p style="margin-top:.5rem"><code>python -m http.server 8000</code></p>
+      </div>
+    </main>
+  </div>
+</section>
+
+<section class="view" id="view-guide">
+  <div class="guide">
+    <h2>Family Guide</h2>
+    <p class="sub">Every family-themed scene across the whole dataset, grouped by genre. Click "find →" to search FPO for that title.</p>
+    <div id="guideBody"></div>
+  </div>
+</section>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<script>
+'use strict';
+
+const STORAGE_KEY = 'starlet_seen_v4';
+const GENRE_LABELS = {
+  stepmom:'Stepmom', stepsis:'Stepsis', stepdaughter:'Stepdaughter', stepdad:'Stepdad', stepbro:'Stepbrother',
+  mom:'Mom / MILF', family:'Family (general)', birthday:'Birthday Gift', persuasion:'Persuasion',
+  permission:'Permission', 'shared-bed':'Shared Bed', swap:'Swap', cheating:'Cheating', blackmail:'Blackmail',
+  study:'Study Help', sensory:'Sensory Play', siblings:'Siblings', caught:'Caught', sleepover:'Sleepover', vacation:'Vacation',
+};
+const state = {
+  data: [], seen: new Set(), filters: {}, q: '', sort: 'name',
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const debounce = (fn, ms=150) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+function loadSeen(){
+  try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) state.seen = new Set(JSON.parse(raw)); }
+  catch { state.seen = new Set(); }
+}
+function saveSeen(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.seen])); } catch {}
+}
+
+async function loadData(){
+  try {
+    const res = await fetch('performers-tagged.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('not an array');
+    state.data = data;
+    const genreCount = data.reduce((n, r) => n + (r.genres?.length || 0), 0);
+    $('subtitle').textContent = `${data.length} performers · ${genreCount} genre tags · click a card to mark seen`;
+    $('empty').hidden = true;
+    return true;
+  } catch (e){
+    console.error('load failed:', e);
+    $('subtitle').textContent = 'failed to load performers-tagged.json';
+    $('empty').hidden = false;
+    return false;
+  }
+}
+
+/* Facets — genre first, then descriptors */
+const FACETS = [
+  { id:'genre',       label:'Family Genre',  get: r => r.genres || [] },
+  { id:'source',      label:'Source',        get: r => ['main','excogi','reference'].filter(k => r.sources?.[k]) },
+  { id:'hair',        label:'Hair',          get: r => r.hair ? [r.hair] : [] },
+  { id:'body',        label:'Body',          get: r => r.body ? [r.body] : [] },
+  { id:'ethnicity',   label:'Ethnicity',     get: r => r.ethnicity ? [r.ethnicity] : [] },
+  { id:'nationality', label:'Nationality',   get: r => r.nationality ? [r.nationality] : [] },
+  { id:'tier',        label:'Award Tier',    get: r => r.tier || [] },
+  { id:'scene',       label:'Has Scenes',    get: r => (r.scenes||[]).length ? ['has-scenes'] : [] },
+];
+
+function buildFacets(){
+  const sidebar = $('sidebar');
+  sidebar.innerHTML = '';
+  for (const facet of FACETS){
+    const counts = new Map();
+    for (const rec of state.data){
+      for (const v of facet.get(rec) || []){
+        const key = String(v).toLowerCase();
+        if (!key) continue;
+        counts.set(key, (counts.get(key) || 0) + 1);
+      }
+    }
+    if (!counts.size) continue;
+    const sorted = [...counts.entries()].sort((a,b) => b[1] - a[1]);
+    const div = document.createElement('div');
+    div.className = 'facet';
+    div.innerHTML = `<h3>${esc(facet.label)}</h3>`;
+    for (const [val, n] of sorted){
+      const id = `f-${facet.id}-${val.replace(/[^a-z0-9]+/g,'-')}`;
+      const label = GENRE_LABELS[val] || val.replace(/-/g,' ');
+      const checked = state.filters[facet.id]?.has(val) ? 'checked' : '';
+      div.insertAdjacentHTML('beforeend',
+        `<label for="${id}"><input type="checkbox" id="${id}" data-facet="${facet.id}" data-val="${esc(val)}" ${checked}><span>${esc(label)}</span><span class="count">${n}</span></label>`);
+    }
+    sidebar.appendChild(div);
+  }
+}
+
+function passes(rec){
+  for (const facet of FACETS){
+    const sel = state.filters[facet.id];
+    if (!sel?.size) continue;
+    const vals = (facet.get(rec) || []).map(v => String(v).toLowerCase());
+    if (!vals.some(v => sel.has(v))) return false;
+  }
+  if (state.q){
+    const q = state.q.toLowerCase();
+    const hay = [
+      rec.name, rec.notes, rec.expanded,
+      ...(rec.tags||[]), ...(rec.genres||[]),
+      ...(rec.scenes||[]).flatMap(s => [s.title, s.studio]),
+      ...(rec.awards||[]), ...(rec.badges||[]),
+    ].join(' ').toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function sortRecs(a, b){
+  switch (state.sort){
+    case 'age':    return (a.age||999) - (b.age||999);
+    case 'year':   return (a.active?.from||9999) - (b.active?.from||9999);
+    case 'scenes': return (b.scenes?.length||0) - (a.scenes?.length||0);
+    default:       return a.name.localeCompare(b.name);
+  }
+}
+
+function sceneRowHTML(s){
+  const q = encodeURIComponent(`${s.title || ''} ${s.studio || ''}`.trim());
+  return `<li>
+    <b>${esc(s.title || '—')}</b>${s.studio ? ' · ' + esc(s.studio) : ''}
+    <a class="find" href="https://www.fpo.xxx/search/${q}/" target="_blank" rel="noopener noreferrer">find →</a>
+  </li>`;
+}
+
+function cardHTML(r){
+  const isSeen = state.seen.has(r.id);
+  const sources = ['main','excogi','reference'].filter(k => r.sources?.[k]);
+  const genres = (r.genres||[]).map(g => `<button type="button" class="genre-chip" data-genre="${esc(g)}">${esc(GENRE_LABELS[g] || g)}</button>`).join('');
+  const awards = (r.awards||[]).slice(0,3).map(a => `<span class="badge${/win|award|goat|legend/i.test(a) ? ' trophy' : ''}">${esc(a)}</span>`).join('');
+  const scenesHTML = (r.scenes||[]).length
+    ? `<div class="scenes"><b>Scenes (${r.scenes.length}):</b><ul>${r.scenes.slice(0,5).map(sceneRowHTML).join('')}</ul></div>`
+    : '';
+  const yearLabel = r.active?.label || (r.active?.from ? (r.active.to ? `${r.active.from}–${r.active.to}` : `${r.active.from}+`) : '—');
+  const fpoUrl = `https://www.fpo.xxx/search/${encodeURIComponent(r.name)}/`;
+  const bpd = r.links?.babepedia
+    ? `https://www.babepedia.com/babe/${encodeURIComponent(r.links.babepedia.replace(/\s+/g,'_'))}`
+    : null;
+  return `<article class="card${isSeen?' seen':''}" data-id="${esc(r.id)}">
+    <div class="card-name">${esc(r.name)}</div>
+    <div class="card-meta">${r.age ? 'Age ' + esc(r.age) : 'Age ?'} · ${esc(yearLabel)}${r.height ? ' · ' + esc(r.height) : ''}</div>
+    <div class="sources">${sources.map(s => `<span class="src ${s}">${s}</span>`).join('')}</div>
+    ${genres ? `<div class="genre-chips">${genres}</div>` : ''}
+    ${awards ? `<div class="badges">${awards}</div>` : ''}
+    ${scenesHTML}
+    <div class="links">
+      <a class="link" href="${fpoUrl}" target="_blank" rel="noopener noreferrer">FPO search</a>
+      ${bpd ? `<a class="link" href="${bpd}" target="_blank" rel="noopener noreferrer">Babepedia</a>` : ''}
+    </div>
+  </article>`;
+}
+
+function renderBrowse(){
+  const filtered = state.data.filter(passes).sort(sortRecs);
+  const grid = $('grid');
+  grid.innerHTML = filtered.length
+    ? filtered.map(cardHTML).join('')
+    : `<div class="no-results">No performers match the current filters.</div>`;
+  $('statTotal').textContent = state.data.length;
+  $('statShown').textContent = filtered.length;
+  $('statSeen').textContent  = state.seen.size;
+  grid.onclick = e => {
+    const chip = e.target.closest('.genre-chip');
+    if (chip){
+      e.stopPropagation();
+      if (!state.filters.genre) state.filters.genre = new Set();
+      state.filters.genre.add(chip.dataset.genre);
+      buildFacets();
+      renderBrowse();
+      return;
+    }
+    const card = e.target.closest('.card');
+    if (!card || e.target.closest('a')) return;
+    const id = card.dataset.id;
+    if (state.seen.has(id)) state.seen.delete(id); else state.seen.add(id);
+    saveSeen();
+    card.classList.toggle('seen', state.seen.has(id));
+    $('statSeen').textContent = state.seen.size;
+  };
+}
+
+function renderGuide(){
+  // collect scenes by genre
+  const byGenre = {};
+  for (const r of state.data){
+    for (const s of r.scenes || []){
+      const gs = (s.genres && s.genres.length) ? s.genres : r.genres || [];
+      for (const g of gs){
+        if (!byGenre[g]) byGenre[g] = [];
+        byGenre[g].push({ performer: r.name, ...s });
+      }
+    }
+  }
+  const order = Object.keys(GENRE_LABELS).filter(g => byGenre[g]?.length);
+  const body = $('guideBody');
+  if (!order.length){
+    body.innerHTML = `<div class="no-results">No scene-level genre tags found. Check that <code>node tag-genres.mjs</code> ran successfully.</div>`;
+    return;
+  }
+  body.innerHTML = order.map(g => {
+    const scenes = byGenre[g];
+    const rows = scenes.map(s => {
+      const q = encodeURIComponent(`${s.title} ${s.studio || ''}`.trim());
+      return `<div class="scene-row">
+        <span class="who">${esc(s.performer)}</span>
+        <span class="what"><b>${esc(s.title)}</b></span>
+        <span class="studio">${esc(s.studio || '')}</span>
+        <a class="go" href="https://www.fpo.xxx/search/${q}/" target="_blank" rel="noopener noreferrer">find →</a>
+      </div>`;
+    }).join('');
+    return `<div class="shelf">
+      <h3>${esc(GENRE_LABELS[g] || g)}</h3>
+      <div class="shelf-meta">${scenes.length} scene${scenes.length===1?'':'s'}</div>
+      ${rows}
+    </div>`;
+  }).join('');
+}
+
+function renderAll(){ renderBrowse(); renderGuide(); }
+
+function wire(){
+  $('q').addEventListener('input', debounce(e => { state.q = e.target.value; renderBrowse(); }));
+  $('sort').addEventListener('change', e => { state.sort = e.target.value; renderBrowse(); });
+  $('sidebar').addEventListener('change', e => {
+    const cb = e.target.closest('input[data-facet]');
+    if (!cb) return;
+    const { facet, val } = cb.dataset;
+    if (!state.filters[facet]) state.filters[facet] = new Set();
+    if (cb.checked) state.filters[facet].add(val);
+    else state.filters[facet].delete(val);
+    renderBrowse();
+  });
+  $('resetFilters').addEventListener('click', () => {
+    state.filters = {};
+    document.querySelectorAll('#sidebar input[type=checkbox]').forEach(cb => cb.checked = false);
+    renderBrowse();
+
+  });
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      const target = document.getElementById('view-' + tab.dataset.view);
+      if (target) target.classList.add('active');
+    });
+  });
+}
+
+(async function boot(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state.seen = new Set(JSON.parse(raw));
+  } catch {}
+  const ok = await loadData();
+  if (!ok) return;
+  wire();
+  buildFacets();
+  renderAll();
+})();
+</script>
+</body>
+</html>

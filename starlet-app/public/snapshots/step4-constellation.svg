@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#140f16" />
+      <stop offset="100%" stop-color="#080609" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d4a853" />
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#f43f5e" />
+    </linearGradient>
+  </defs>
+
+  <!-- Dark Obsidian Stage Background -->
+  <rect width="800" height="480" fill="url(#bgGrad)" rx="16" />
+
+  <!-- Top Mock Window Chrome / Header Bar -->
+  <rect x="0" y="0" width="800" height="42" fill="#1b141e" rx="16" />
+  <circle cx="24" cy="21" r="5" fill="#ef4444" opacity="0.8" />
+  <circle cx="40" cy="21" r="5" fill="#f59e0b" opacity="0.8" />
+  <circle cx="56" cy="21" r="5" fill="#10b981" opacity="0.8" />
+  <text x="80" y="25" fill="#d4a853" font-family="Cinzel, serif" font-weight="700" font-size="12" letter-spacing="1.5">STARLET VIP DIRECTORY · HOMEPAGE UI</text>
+  <rect x="660" y="12" width="120" height="18" rx="9" fill="#09070a" stroke="#d4a853" stroke-width="0.8" stroke-opacity="0.4" />
+  <text x="675" y="25" fill="#d4a853" font-family="monospace" font-size="9" font-weight="bold">● LIVE VERIFIED</text>
+
+  <!-- Main Viewport Content -->
+  <g transform="translate(0, 42)">
+    
+  <!-- Dark Galaxy Canvas -->
+  <rect x="25" y="10" width="750" height="400" rx="18" fill="#060508" stroke="#221727" />
+
+  <!-- Constellation Nodes & Connecting Filaments -->
+  <g stroke="#d4a853" stroke-width="1.2" stroke-opacity="0.4">
+    <line x1="400" y1="200" x2="250" y2="120" />
+    <line x1="400" y1="200" x2="550" y2="120" />
+    <line x1="400" y1="200" x2="280" y2="290" />
+    <line x1="400" y1="200" x2="520" y2="290" />
+    <line x1="250" y1="120" x2="550" y2="120" stroke-dasharray="4,4" />
+    <line x1="280" y1="290" x2="520" y2="290" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- Center Hub Starlet -->
+  <circle cx="400" cy="200" r="38" fill="#2d1933" stroke="#f59e0b" stroke-width="3" />
+  <text x="400" y="206" fill="#ffffff" font-family="serif" font-size="14" font-weight="bold" text-anchor="middle">Melody</text>
+
+  <!-- Orbital Starlets -->
+  <circle cx="250" cy="120" r="26" fill="#1b1420" stroke="#fb7185" stroke-width="2" />
+  <text x="250" y="125" fill="#fb7185" font-family="serif" font-size="11" font-weight="bold" text-anchor="middle">Vanna</text>
+
+  <circle cx="550" cy="120" r="26" fill="#1b1420" stroke="#60a5fa" stroke-width="2" />
+  <text x="550" y="125" fill="#60a5fa" font-family="serif" font-size="11" font-weight="bold" text-anchor="middle">Alina</text>
+
+  <circle cx="280" cy="290" r="26" fill="#1b1420" stroke="#eab308" stroke-width="2" />
+  <text x="280" y="295" fill="#eab308" font-family="serif" font-size="11" font-weight="bold" text-anchor="middle">Hazel</text>
+
+  <circle cx="520" cy="290" r="26" fill="#1b1420" stroke="#4ade80" stroke-width="2" />
+  <text x="520" y="295" fill="#4ade80" font-family="serif" font-size="11" font-weight="bold" text-anchor="middle">Kendra</text>
+  
+  </g>
+
+  <!-- Marked Red Bounding Box with Neon Glow and Target Crosshairs -->
+  <g filter="url(#redGlow)">
+    <!-- Red Outer Box -->
+    <rect x="190" y="75" width="420" height="310" 
+          fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="8,4" rx="10" />
+    <!-- Glowing Corner Accents -->
+    <path d="M 190 91 L 190 75 L 206 75" fill="none" stroke="#ff2222" stroke-width="4.5" />
+    <path d="M 594 75 L 610 75 L 610 91" fill="none" stroke="#ff2222" stroke-width="4.5" />
+    <path d="M 190 369 L 190 385 L 206 385" fill="none" stroke="#ff2222" stroke-width="4.5" />
+    <path d="M 594 385 L 610 385 L 610 369" fill="none" stroke="#ff2222" stroke-width="4.5" />
+  </g>
+
+  <!-- Target Identifier Badge Tag -->
+  <g transform="translate(190, 49)">
+    <rect x="0" y="0" width="373.6" height="24" rx="6" fill="#ef4444" />
+    <circle cx="12" cy="12" r="4" fill="#ffffff" />
+    <text x="22" y="16" fill="#ffffff" font-family="monospace" font-weight="800" font-size="11" letter-spacing="0.5">FEATURE 4: CELESTIAL CO-STAR CONSTELLATION GRAPH</text>
+  </g>
+</svg>

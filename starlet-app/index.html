@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function() {
+        var APP_VERSION = 'v8';
+        try {
+          var lastVersion = localStorage.getItem('starlet_app_version');
+          if (lastVersion !== APP_VERSION) {
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(regs) {
+                for (var i = 0; i < regs.length; i++) regs[i].unregister();
+              });
+            }
+            if ('caches' in window) {
+              caches.keys().then(function(names) {
+                for (var i = 0; i < names.length; i++) caches.delete(names[i]);
+              });
+            }
+            localStorage.setItem('starlet_app_version', APP_VERSION);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0709" />
+    <title>Ambient Lounge · Focus &amp; 4K Audio Visuals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
